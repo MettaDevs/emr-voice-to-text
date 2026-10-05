@@ -36,10 +36,12 @@ from audio_processor import (
 
 # Prompt Prior Kosakata Medis Indonesia & Istilah Klinis Standar Rumah Sakit Indonesia
 INDONESIAN_CLINICAL_PROMPT = (
-    "Transkripsi percakapan klinis dokter dan pasien di rumah sakit Indonesia. "
-    "Keluhan utama, anamnesa, riwayat penyakit, gejala demam, pusing, batuk pilek, sesak napas, "
-    "mual muntah, nyeri perut, lemas, pemeriksaan fisik, tensi darah, suhu tubuh, denyut nadi, "
-    "dan riwayat alergi obat."
+    "Transkripsi percakapan klinis dokter dan pasien di rumah sakit, puskesmas, dan klinik Indonesia. "
+    "Dokter: Selamat pagi bu, keluhan utamanya apa ya? Sejak kapan terasa? Ada demam, pusing kliyengan, batuk berdahak, "
+    "pilek hidung tersumbat, mual muntah, perut melilit, sesak napas, atau nyeri dada? Ada riwayat maag, tensi darah tinggi, "
+    "gula darah, atau alergi obat? Coba kita cek tensi, timbang berat badan, buka mulutnya, dan tarik napas dalam. "
+    "Pasien: Ini dok, saya pusing dari kemarin, badan panas meriang nggreges, lemas pegal linu, dan mau cari surat sakit dokter. "
+    "Dokter: Baik bu, tensinya normal, nanti saya buatkan resep diminum sesudah makan tiga kali sehari dan banyak istirahat."
 )
 
 # Frasa halusinasi Whisper & gumaman noise yang disaring secara aman

@@ -157,7 +157,7 @@ COLLOQUIAL_TO_MEDICAL = {
     r'\bkram[-\s]?kram\b|\bkram\b':                     'kram otot',
 
     # ── Saluran Cerna / Pencernaan ──
-    r'\bmencret\b|\bmurus\b':                           'diare',
+    r'\bmencret\b|\bmurus\b|\bmenceret\b':              'diare',
     r'\bbuang[-\s]?buang\s+air\b':                      'buang air besar cair',
     r'\bbab\s+cair\b|\bbab\s+encer\b':                  'BAB cair',
     r'\bsembelit\b|\bsusah\s+bab\b|\bbebelen\b':        'sembelit (susah BAB)',
@@ -167,21 +167,23 @@ COLLOQUIAL_TO_MEDICAL = {
     r'(?<=\bkembung\s)begah\b':                         '',
     r'\bperut\s+kembung\b|\bkembung\b':                 'perut kembung',
     r'\bbegah\b|\bsebah\b':                             'kembung',
-    r'\beneg\b|\benek\b|\benek\s+perutnya\b|\bpengen\s+muntah\b|\bmau\s+muntah\b': 'mual',
+    r'\beneg\b|\benek\b|\bnek\b|\benek\s+perutnya\b|\bmual\s+nek\b|\bpengen\s+muntah\b|\bmau\s+muntah\b': 'mual',
     r'\bmual\s+muntah\b':                               'mual dan muntah',
     r'\bmuntah[-\s]?muntah\b':                          'muntah-muntah',
     r'\bulu\s+hati\s+perih\b|\bulu\s+hati\s+sakit\b|\bnyeri\s+ulu\s+hati\b': 'nyeri ulu hati',
+    r'\blambung\s+perih\b|\bperih\s+lambung\b':         'nyeri lambung',
     r'\bmaag\s+kambuh\b|\bsakit\s+maag\b':              'sakit maag',
     r'\basam\s+lambung(?:\s+naik)?\b|\bgerd\b':         'asam lambung',
     r'\bmasuk\s+angin\b':                               'masuk angin',
 
     # ── Pernapasan & THT ──
     r'\bsesek\b|\bengap\b|\bngos[-\s]?ngosan\b|\bmegap[-\s]?megap\b': 'sesak napas',
+    r'\bngik[-\s]?ngik\b|\bmengi\b|\bnapas\s+bunyi\b':  'sesak napas mengi',
     r'\bnafas\s+sesak\b|\bnapas\s+sesak\b':             'sesak napas',
     r'\bhidung\s+mampet\b|\bhidung\s+buntu\b|\bhidung\s+tersumbat\b|\bmeler\b|\bingusan\b': 'hidung tersumbat',
     r'\btenggorokan\s+gatal\b|\bgatal\s+tenggorokan\b': 'tenggorokan gatal',
     r'\btenggorokan\s+sakit\b|\bsakit\s+tenggorokan\b': 'sakit tenggorokan',
-    r'\bnelen\s+sakit\b|\bsakit\s+buat\s+menelan\b|\bsakit\s+menelan\b': 'nyeri menelan',
+    r'\bnelen\s+sakit\b|\bsakit\s+nelen\b|\bnelen\s+perih\b|\btenggorokan\s+perih\b|\bsakit\s+buat\s+menelan\b|\bsakit\s+menelan\b': 'nyeri menelan',
     r'\bsuara\s+serak\b|\bsuara\s+parau\b|\bsuara\s+hilang\b': 'suara serak',
     r'\bbatuk[-\s]?batuk\b':                            'batuk-batuk',
     r'\bbatuk\s+berdahak\b|\bbatuk\s+grok[-\s]?grok\b': 'batuk berdahak',
@@ -190,12 +192,13 @@ COLLOQUIAL_TO_MEDICAL = {
     # ── Nyeri, Otot & Tulang ──
     r'\bpegel[-\s]?linu\b|\bpegal[-\s]?linu\b|\bpegel[-\s]?pegel\b|\bpegal[-\s]?pegal\b|\bpegel\b|\bpegal\b': 'pegal-pegal linu',
     r'\bngilu\b|\bsendi\s+ngilu\b|\btulang\s+ngilu\b':  'nyeri sendi',
+    r'\bbadan\s+linu\b|\bbadan\s+remuk\b':              'pegal-pegal linu',
     r'\bencok\b|\bboyok\s+sakit\b|\bsakit\s+boyok\b':   'sakit pinggang',
     r'\blemes\s+banget\b|\bbadan\s+lemes\b|\bbadan\s+lemas\b|\bloyo\b|\blunglai\b|\bgak\s+bertenaga\b|\bnggak\s+ada\s+tenaga\b': 'badan lemas',
 
     # ── Saluran Kemih ──
     r'\banyang[-\s]?anyangan\b':                        'anyang-anyangan',
-    r'\bpipis\s+perih\b|\bpipis\s+sakit\b':             'kencing perih',
+    r'\bpipis\s+perih\b|\bpipis\s+sakit\b|\bkencing\s+sakit\b': 'kencing perih',
     r'\bkencing\s+panas\b':                             'kencing panas',
     r'\bbeser\b|\bsering\s+kencing\b|\bbolak[-\s]?balik\s+pipis\b': 'sering buang air kecil',
 
@@ -205,10 +208,11 @@ COLLOQUIAL_TO_MEDICAL = {
     # ── Jantung & Dada ──
     r'\bdada\s+(?:saya\s+)?sakit(?:\s+nyeri)?\b|\bdada\s+(?:saya\s+)?nyeri\b|\bsakit\s+dada\b': 'nyeri dada',
     r'\bdeg[-\s]?degan\b|\bjantung\s+deg[-\s]?degan\b|\bjantung\s+berdebar\b': 'jantung berdebar',
-    r'\bgak\s+nafsu\s+makan\b|\bnggak\s+nafsu\s+makan\b|\btidak\s+nafsu\s+makan\b|\bnafsu\s+makan\s+berkurang\b': 'nafsu makan berkurang',
-    r'\bsusah\s+tidur\b|\btidak\s+bisa\s+tidur\b|\binsomnia\b': 'susah tidur',
+    r'\bgak\s+nafsu\s+makan\b|\bnggak\s+nafsu\s+makan\b|\btidak\s+nafsu\s+makan\b|\bnafsu\s+makan\s+berkurang\b|\bsusah\s+makan\b': 'nafsu makan berkurang',
+    r'\bsusah\s+tidur\b|\btidak\s+bisa\s+tidur\b|\btidur\s+tidak\s+nyenyak\b|\binsomnia\b': 'susah tidur',
     r'\bkeringat\s+dingin\b|\bkeringet\s+dingin\b|\bkeringat\s+malam\b': 'keringat dingin',
     r'\b(?:sudah\s+)?mendingan\b|\bsudah\s+membaik\b|\bmulai\s+enakan\b|\bagak\s+mendingan\b': 'sudah membaik',
+    r'\bsurat\s+dc\b|\bsurat\s+ijin\b|\bsurat\s+ijin\s+sakit\b|\bsurat\s+istirahat\b': 'surat izin sakit',
 }
 
 # 2c. Kata Gaul / Slang / Informal → Baku
@@ -254,8 +258,11 @@ INFORMAL_TO_FORMAL = {
 DOCTOR_EXPLICIT_ACTIONS = [
     # Sapaan & Pembuka Dokter
     r'\b(?:selamat\s+(?:pagi|siang|sore|malam))\b(?!\s*dok)',
-    r'\bsilakan\s+(?:duduk|masuk|cerita|tiduran|berbaring)\b',
+    r'\bsilakan\s+(?:duduk|masuk|cerita|tiduran|berbaring|naik\s+ke\s+bed)\b',
     r'\bada\s+yang\s+bisa\s+(?:saya\s+)?bantu\b',
+    r'\bada\s+yang\s+(?:bisa\s+dibantu|terasa|dikeluhkan)\b',
+    r'\b(?:gimana|bagaimana)\s+(?:keluhannya|kondisinya|keadaannya)\b',
+
     # Pertanyaan Anamnesis
     r'\bkeluhan(?:nya)?\s+apa\b',
     r'\bada\s+keluhan\s+apa\b',
@@ -272,37 +279,58 @@ DOCTOR_EXPLICIT_ACTIONS = [
     r'\bmulai\s+kapan\b',
     r'\bberapa\s+hari\b',
     r'\batau\s+(?:bagaimana|gimana|apa)\b',
-    # Pertanyaan gejala klinis oleh dokter (bukan sambungan keluhan pasien 'sama ada ...' atau 'ada ... juga')
+
+    # Karakteristik Nyeri & Gejala Klinis
+    r'\b(?:nyerinya|sakitnya)\s+(?:seperti\s+apa|terasa\s+bagaimana|hilang\s+timbul|menusuk|perih|menjalar)\b',
+    r'\bada\s+(?:muntah|mual|demam|batuk|pilek|sesak|diare|mencret)\s+berapa\s+kali\b',
+    r'\b(?:dahaknya|batuknya)\s+(?:warna\s+apa|ada\s+darah|berdahak|kering)\b',
+    r'\b(?:bab|buang\s+air\s+besar)(?:-nya)?\s+(?:cair|encer|lendir|darah|berapa\s+kali)\b',
+    r'\b(?:susah|sulit)\s+(?:bab|buang\s+air|kencing|menelan|tidur)\b',
     r'(?<!sama\s)(?<!terus\s)(?<!juga\s)(?<!dan\s)(?<!tidak\s)(?<!nggak\s)(?<!gak\s)\bada\s+(?:panas|demam|batuk|pilek|sesak|mual|muntah|pusing|mencret|diare|darah)\b(?!\s+juga)',
     r'\bada\s+gejala\s+(?:lain|tambahan)\b',
     r'\bada\s+keluhan\s+(?:lain|tambahan)\b',
+
+    # Riwayat Penyakit & Alergi
     r'\bada\s+riwayat\b',
-    # Pertanyaan alergi oleh dokter
+    r'\b(?:ada\s+riwayat|punya\s+riwayat)\s+(?:darah\s+tinggi|hipertensi|gula|diabetes|kencing\s+manis|maag|asam\s+lambung|gerd|asma|jantung|kolesterol|asam\s+urat)\b',
     r'\b(?:untuk\s+)?alergi(?:\s+obat(?:nya)?)?(?:\s+(?:ibu|bapak|pak|bu|anda))?\s+ada\b',
     r'\b(?:ibu|bapak|pak|bu|anda)\s+ada\s+alergi\b',
     r'\bada\s+alergi\b|\bpunya\s+alergi\b',
     r'\bsudah\s+(?:minum\s+obat|diperiksa|berobat|ke\s+dokter)\b',
     r'\bobat\s+apa\s+yang\s+(?:sudah|pernah)\b',
-    r'\bpernah\s+(?:sakit|dirawat|operasi)\b',
+    r'\bpernah\s+(?:sakit|sakit\s+begini|dirawat|masuk\s+rs|operasi)\b',
+    r'\bkeluarga\s+ada\s+(?:yang\s+sama|riwayat)\b',
+
     # Pemeriksaan Fisik & Prosedur Medis
     r'\b(?:coba|mari|boleh|kita)\s+(?:saya\s+)?(?:cek|periksa|lihat|dengar|timbang|ukur)\b',
-    r'\b(?:coba|mari|kita)\s+(?:cek|periksa|ukur)\s+(?:tensi|suhu|darah|berat)\b',
-    r'\b(?:coba\s+)?timbang\s+(?:dulu|berat\s+badan)\b',
+    r'\b(?:coba|mari|kita)\s+(?:cek|periksa|ukur)\s+(?:tensi|tekanan\s+darah|suhu|darah|berat|nadi|saturasi|gula)\b',
+    r'\b(?:coba\s+)?timbang\s+(?:dulu|berat\s+badan|badan)\b',
     r'\bkita\s+(?:cek|periksa|timbang)\s+dulu\b',
     r'\bcek\s+tensi(?:nya)?\s+dulu\b',
     r'\b(?:ya|iya|oke|baik)\s+(?:bu|pak|mas|mbak)[,.]*\s+(?:coba|kita|mari|silakan)\s+(?:cek|periksa|tensi|lihat)\b',
-    r'\b(?:tarik|hembuskan|buang)\s+napas\b',
-    r'\bbuka\s+mulutnya\b|\bjulurkan\s+lidah\b|\bbilang\s+aah\b',
+    r'\b(?:tarik|hembuskan|buang)\s+napas\b|\btarik\s+napas\s+(?:dalam|panjang)\b',
+    r'\bhembuskan(?:\s+pelan-pelan)?\b',
+    r'\bbuka\s+mulutnya(?:\s+lebar)?\b|\bjulurkan\s+lidah\b|\bbilang\s+aah\b|\bmelet\b',
     r'\b(?:tiduran|berbaring)\s+di\s+(?:sini|bed|ranjang)\b',
+    r'\b(?:coba\s+)?rileks\s+ya\b|\bsaya\s+(?:pegang|raba|tekan)\s+perutnya\b',
+    r'\b(?:sakit|nyeri)\s+(?:tidak|nggak|gak)\s+kalau\s+ditekan\b',
+    r'\b(?:saya\s+)?dengarkan\s+(?:suara\s+napas|dada|paru|jantung)(?:nya)?\b',
+
     # Diagnosis, TTV, Resep & Edukasi Pulang
-    r'\b(?:tensinya|tekanan\s+darahnya|suhunya|nadinya|saturasinya)\s+(?:normal|tinggi|rendah|\d+)\b',
-    r'\bini\s+sepertinya\s+(?:radang|flu|infeksi|maag|diare|alergi)\b',
+    r'\b(?:tensinya|tekanan\s+darahnya|suhunya|nadinya|saturasinya)\s+(?:normal|bagus|tinggi|rendah|\d+)\b',
+    r'\bini\s+(?:sepertinya|kemungkinan)\s+(?:radang|ispa|flu|infeksi|maag|asam\s+lambung|diare|alergi|kelelahan|kecapekan|masuk\s+angin)\b',
+    r'\bparu-parunya\s+bersih\b',
     r'\bnanti\s+saya\s+(?:resepkan|kasih\s+obat|buatkan\s+resep)\b',
     r'\bsaya\s+(?:buatkan|tuliskan)\s+resep\b',
     r'\btebus\s+(?:obat|resep)\b',
-    r'\bminum\s+obatnya\b|\bsesudah\s+makan\b|\bsebelum\s+makan\b',
-    r'\bbanyak\s+istirahat\b|\bbanyak\s+minum\s+air\b',
+    r'\bminum\s+obatnya\b|\bsesudah\s+makan\b|\bsebelum\s+makan\b|\bsetelah\s+makan\b',
+    r'\bdiminum\s+(?:\d+|satu|dua|tiga|empat)\s+kali\s+sehari\b',
+    r'\bantibiotik(?:nya)?\s+(?:harus\s+)?dihabiskan\b',
+    r'\bdiminum\s+kalau\s+(?:perlu|demam|nyeri|sakit)\s+saja\b',
+    r'\bbanyak\s+istirahat\b|\bbanyak\s+minum\s+air\b|\bminum\s+air\s+hangat\b',
+    r'\bkurangi\s+(?:makanan\s+pedas|es|gorengan|kopi|asam)\b',
     r'\bkontrol\s+kembali\b|\bkontrol\s+lagi\b',
+    r'\bini\s+surat\s+(?:istirahat|izin\s+sakit|keterangan\s+dokter|rujukan)(?:nya)?\b',
     r'\bsemoga\s+(?:cepat|lekas)\s+sembuh\b',
 ]
 
@@ -311,8 +339,9 @@ PATIENT_EXPLICIT_CUES = [
     # Panggilan langsung ke dokter
     r'\bdok\b|\bdokter\b',
     # Respon konfirmasi pasien
-    r'\b(?:pagi|siang|sore|malam|halo|hai|iya|ya|tidak|nggak|bukan|betul|benar|baik|siap|makasih|terima\s+kasih)\s+dok(?:ter)?\b',
+    r'\b(?:pagi|siang|sore|malam|halo|hai|iya|ya|tidak|nggak|bukan|betul|benar|baik|siap|makasih|terima\s+kasih|ngerti|bisa|sudah|belum)\s+dok(?:ter)?\b',
     r'\b(?:kan|gitu|dong|sih|lho|kok|nih)\s+dok(?:ter)?\b',
+    r'\bpermisi\s+dok(?:ter)?\b',
     # Sambungan keluhan pasien: "sama ada panas juga", "terus ada pilek"
     r'\b(?:sama|terus|dan|juga)\s+ada\s+(?:panas|demam|batuk|pilek|sesak|pusing|mual|nyeri)\b',
     r'\bada\s+(?:panas|demam|batuk|pilek|sesak|pusing|mual|nyeri)\s+juga\b',
@@ -327,8 +356,27 @@ PATIENT_EXPLICIT_CUES = [
     # Sensasi keluhan & durasi dari pasien
     r'\b(?:dari\s+kemarin|sejak\s+kemarin|sudah\s+(?:\d+|satu|dua|tiga|empat|lima|enam|tujuh|beberapa)\s+hari|dari\s+tadi|dari\s+semalam|kemarin\s+malam)\b',
     r'\b(?:merasa|kerasa|ngerasain|tersiksa|nggak\s+kuat)\b',
+    # Ragam keluhan khas pasien Indonesia
+    r'\b(?:puyeng|kleyengan|mumet|nyut[-\s]?nyutan|cekot[-\s]?cekot|kepala\s+berat|muter[-\s]?muter)\b',
+    r'\b(?:meriang|nggreges|greges|panas\s+dingin|badan\s+anget|menggigil|panas\s+dalam)\b',
+    r'\b(?:batuk\s+kering|batuk\s+berdahak|gatal\s+tenggorokan|tenggorokan\s+perih|nelen\s+sakit|sakit\s+nelen|suara\s+serak|suara\s+habis)\b',
+    r'\b(?:hidung\s+mampet|hidung\s+buntu|meler|ingusan|bersin[-\s]?bersin)\b',
+    r'\b(?:sesak\s+napas|napas\s+bunyi|ngik[-\s]?ngik|engap|ngos[-\s]?ngosan)\b',
+    r'\b(?:mual\s+nek|enek|nek\s+perutnya|pengen\s+muntah|mau\s+muntah|muntah[-\s]?muntah)\b',
+    r'\b(?:perut\s+melilit|kembung|begah|sebah|nyeri\s+ulu\s+hati|perih\s+ulu\s+hati|asam\s+lambung)\b',
+    r'\b(?:mencret|bab\s+cair|menceret|buang[-\s]?buang\s+air|susah\s+bab|sembelit)\b',
+    r'\b(?:badan\s+lemas|lemes\s+banget|pegal[-\s]?linu|pegel[-\s]?linu|badan\s+remuk|sendi\s+ngilu|otot\s+kaku|kram)\b',
+    r'\b(?:kesemutan|kebas|baal|keringat\s+dingin)\b',
+    r'\b(?:susah\s+tidur|tidak\s+bisa\s+tidur|nggak\s+nafsu\s+makan|gak\s+nafsu\s+makan|susah\s+makan)\b',
+    r'\b(?:gatal[-\s]?gatal|bentol[-\s]?bentol|biduran|kalikata|bintik\s+merah)\b',
+    # Pengobatan mandiri & riwayat obat
+    r'\b(?:sudah|sempat|kemarin|baru)\s+minum\s+(?:obat\s+warung|tolak\s+angin|panadol|bodrex|paracetamol|promag)\b',
     r'\b(?:belum\s+minum\s+obat|sudah\s+minum\s+obat\s+warung|nggak\s+ada\s+alergi)\b',
+    # Kebutuhan administratif
     r'\bminta\s+surat\s+(?:sakit|rujukan)\b',
+    r'\b(?:minta|cari|buat|perlu)\s+surat\s+(?:izin\s+sakit|sakit|dokter|dc|istirahat|rujukan)\b',
+    r'\b(?:buat|untuk)\s+(?:kantor|kerja|sekolah|kampus|izin)\b',
+    r'\bmau\s+(?:kontrol|periksa\s+rutin|tebus\s+obat)\b',
 ]
 
 # Pola penutur pendamping pasien (keluarga/wali yang menceritakan keluhan pasien lain)
@@ -374,12 +422,14 @@ def _split_into_dialogue_sentences(text: str) -> list[str]:
     # Contoh: "...surat DC juga, ya bu, coba kita cek tensi dulu ya" -> "...surat DC juga. ya bu, coba kita cek tensi dulu ya"
     doc_turn_patterns = [
         r'(?:ya|iya|oke|baik|mari|nah)\s+(?:bu|pak|mas|mbak|bapak|ibu)[,.]*\s+(?:coba|kita|saya|mari|silakan|tolong|periksa|cek|timbang|ukur|tiduran|berbaring|duduk|nanti|sekarang|ini|tensinya|suhunya|\bdulu\b)\b',
-        r'(?:coba|silakan|mari|tolong)\s+(?:(?:saya|kita)\s+)?(?:cek|periksa|lihat|dengar|timbang|ukur|duduk|berbaring|tiduran)\b',
-        r'(?:coba|silakan|mari|tolong)\s+(?:cek|periksa)\s+(?:tensi|suhu|darah)\b',
+        r'(?:coba|silakan|mari|tolong)\s+(?:(?:saya|kita)\s+)?(?:cek|periksa|lihat|dengar|timbang|ukur|duduk|berbaring|tiduran|rileks)\b',
+        r'(?:coba|silakan|mari|tolong)\s+(?:cek|periksa)\s+(?:tensi|suhu|darah|nadi)\b',
         r'coba\s+timbang\s+dulu\b',
         r'(?<!coba\s)(?<!mari\s)kita\s+(?:cek|periksa|timbang|ukur)\s+(?:tensi|suhu|darah|dulu)\b',
-        r'buka\s+mulutnya\b',
-        r'tarik\s+napas(?:nya)?\b',
+        r'(?:buka\s+mulutnya|tarik\s+napas(?:nya)?|julurkan\s+lidah(?:nya)?)\b',
+        r'(?:nanti\s+)?saya\s+(?:resepkan|buatkan\s+resep|kasih\s+obat)\b',
+        r'(?:ini\s+obatnya|diminum\s+sesudah\s+makan)\b',
+        r'(?:ini\s+surat\s+(?:istirahat|izin\s+sakit|keterangan\s+dokter|rujukan))\b',
     ]
     doc_combined = '|'.join(f'(?:{p})' for p in doc_turn_patterns)
     t = re.sub(rf'([a-zA-Z0-9])[,.]?\s+({doc_combined})', r'\1. \2', t, flags=re.I)
@@ -387,7 +437,8 @@ def _split_into_dialogue_sentences(text: str) -> list[str]:
     # 4. Transisi: Tuturan Dokter -> Respon/Konfirmasi Pasien
     # Contoh: "coba kita periksa dulu ya, iya dok" -> "coba kita periksa dulu ya. iya dok"
     pat_turn_patterns = [
-        r'(?:iya|ya|baik|siap|makasih|terima\s+kasih|bisa)\s+dok(?:ter)?\b',
+        r'(?:iya|ya|baik|siap|makasih|terima\s+kasih|bisa|sudah|belum|ngerti)\s+dok(?:ter)?\b',
+        r'(?:ini|saya)\s+dok(?:ter)?[,.]*\s+(?:saya|pusing|panas|demam|batuk|pilek|mual|sesak|lemas|sakit|minta)\b',
     ]
     pat_combined = '|'.join(f'(?:{p})' for p in pat_turn_patterns)
     t = re.sub(rf'([a-zA-Z0-9])[,.]?\s+({pat_combined})', r'\1. \2', t, flags=re.I)
