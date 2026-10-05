@@ -1,0 +1,48 @@
+{
+  "status": "success",
+  "session_id": "VA-1790657214",
+  "audio_file": "rec_1790657209.webm",
+  "audio_url": "/audio/rec_1790657209.webm",
+  "audio_duration": 2.1,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 5.47,
+  "total_time": 5.53,
+  "raw_transcript": "Tes 1 2 3",
+  "layer1_phonetic": "Tes 1 2 3",
+  "cleaned_transcript": "Tes 1 2 3",
+  "labeled_segments": [
+    {
+      "start": 0.0,
+      "end": 2.08,
+      "text": "Tes 1 2 3",
+      "raw_text": "Tes 1 2 3",
+      "speaker": "Pasien"
+    }
+  ],
+  "pipeline_layers": {
+    "L1_phonetic": "Tes 1 2 3",
+    "L2_indonesia": "Tes 1 2 3",
+    "L3_speakers": 1,
+    "L4_medical": {
+      "chief": "",
+      "secondary": [],
+      "duration": ""
+    }
+  },
+  "fields": {
+    "keluhan_utama": "",
+    "keluhan_tambahan": "",
+    "lama_sakit": ""
+  },
+  "confidence": {
+    "level": "RENDAH",
+    "score": 0,
+    "warnings": [
+      "Keluhan utama tidak terdeteksi — pastikan pasien menyebutkan gejalanya",
+      "Transcript terlalu pendek — coba rekam lebih lama"
+    ]
+  },
+  "ml_classification": "KOSONG",
+  "timestamp": "2026-09-29T12:46:54.670072"
+}

@@ -1,0 +1,36 @@
+{
+  "status": "success",
+  "session_id": "VA-1790238239",
+  "audio_file": "rec_1790238238.webm",
+  "audio_url": "/audio/rec_1790238238.webm",
+  "audio_duration": 2.46,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 0.7,
+  "total_time": 0.7,
+  "raw_transcript": "Desu",
+  "cleaned_transcript": "Desu",
+  "labeled_segments": [
+    {
+      "start": 1.36,
+      "end": 2.36,
+      "text": "Desu",
+      "speaker": "Pasien"
+    }
+  ],
+  "fields": {
+    "keluhan_utama": "",
+    "keluhan_tambahan": "",
+    "lama_sakit": ""
+  },
+  "confidence": {
+    "level": "RENDAH",
+    "score": 0,
+    "warnings": [
+      "Keluhan utama tidak terdeteksi — pastikan pasien menyebutkan gejalanya",
+      "Transcript terlalu pendek — rekaman mungkin terlalu singkat atau tidak jelas"
+    ]
+  },
+  "ml_classification": "KLINIS_KOMPREHENSIF",
+  "timestamp": "2026-09-24T16:23:59.534197"
+}

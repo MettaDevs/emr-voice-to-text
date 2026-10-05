@@ -1,0 +1,47 @@
+{
+  "status": "success",
+  "session_id": "VA-1790240428",
+  "audio_file": "rec_1790240428.webm",
+  "audio_url": "/audio/rec_1790240428.webm",
+  "audio_duration": 1.44,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 0.72,
+  "total_time": 0.72,
+  "raw_transcript": "Terima kasih.",
+  "layer1_phonetic": "Terima kasih.",
+  "cleaned_transcript": "Terima kasih.",
+  "labeled_segments": [
+    {
+      "start": 0.0,
+      "end": 1.3,
+      "text": "Terima kasih.",
+      "speaker": "Pasien"
+    }
+  ],
+  "pipeline_layers": {
+    "L1_phonetic": "Terima kasih.",
+    "L2_indonesia": "Terima kasih.",
+    "L3_speakers": 1,
+    "L4_medical": {
+      "chief": "",
+      "secondary": [],
+      "duration": ""
+    }
+  },
+  "fields": {
+    "keluhan_utama": "",
+    "keluhan_tambahan": "",
+    "lama_sakit": ""
+  },
+  "confidence": {
+    "level": "RENDAH",
+    "score": 0,
+    "warnings": [
+      "Keluhan utama tidak terdeteksi — pastikan pasien menyebutkan gejalanya",
+      "Transcript terlalu pendek — coba rekam lebih lama"
+    ]
+  },
+  "ml_classification": "KOSONG",
+  "timestamp": "2026-09-24T17:00:28.986350"
+}

@@ -1,0 +1,58 @@
+{
+  "status": "success",
+  "session_id": "VA-1790240727",
+  "audio_file": "rec_1790240725.webm",
+  "audio_url": "/audio/rec_1790240725.webm",
+  "audio_duration": 6.0,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 2.3,
+  "total_time": 2.31,
+  "raw_transcript": "Tes, satu, dua tiga. Tiga, dua, satu. Amin tes-tes.",
+  "layer1_phonetic": "Tes, satu, dua tiga. Tiga, dua, satu. Amin tes-tes.",
+  "cleaned_transcript": "Tes, satu, dua tiga. Tiga, dua, satu. Amin tes-tes.",
+  "labeled_segments": [
+    {
+      "start": 0.0,
+      "end": 2.36,
+      "text": "Tes, satu, dua tiga.",
+      "speaker": "Pasien"
+    },
+    {
+      "start": 2.36,
+      "end": 4.25,
+      "text": "Tiga, dua, satu.",
+      "speaker": "Pasien"
+    },
+    {
+      "start": 4.25,
+      "end": 5.78,
+      "text": "Amin tes-tes.",
+      "speaker": "Pasien"
+    }
+  ],
+  "pipeline_layers": {
+    "L1_phonetic": "Tes, satu, dua tiga. Tiga, dua, satu. Amin tes-tes.",
+    "L2_indonesia": "Tes, satu, dua tiga. Tiga, dua, satu. Amin tes-tes.",
+    "L3_speakers": 3,
+    "L4_medical": {
+      "chief": "",
+      "secondary": [],
+      "duration": ""
+    }
+  },
+  "fields": {
+    "keluhan_utama": "",
+    "keluhan_tambahan": "",
+    "lama_sakit": ""
+  },
+  "confidence": {
+    "level": "RENDAH",
+    "score": 0,
+    "warnings": [
+      "Keluhan utama tidak terdeteksi — pastikan pasien menyebutkan gejalanya"
+    ]
+  },
+  "ml_classification": "KOSONG",
+  "timestamp": "2026-09-24T17:05:27.825716"
+}

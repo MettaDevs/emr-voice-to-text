@@ -1,0 +1,197 @@
+{
+  "status": "success",
+  "session_id": "EMR-1791175274",
+  "session_metadata": {
+    "session_id": "EMR-1791175274",
+    "timestamp": "2026-10-05T12:41:14.724075",
+    "audio_file": "",
+    "audio_duration": 0.0,
+    "language": "id"
+  },
+  "audio_file": "SESS-1791175267178_assembled.wav",
+  "audio_url": null,
+  "audio_duration": 1.98,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 4.28,
+  "total_time": 4.36,
+  "audio_status": "OPTIMAL",
+  "transcription_status": "success",
+  "audio_diagnostics": {
+    "valid": true,
+    "status": "OPTIMAL",
+    "file_size_bytes": 63372,
+    "duration_seconds": 1.979,
+    "source_codec": "pcm_s16le",
+    "source_sample_rate": 16000,
+    "source_channels": 1,
+    "target_sample_rate": 16000,
+    "target_channels": 1,
+    "rms_dbfs": -22.12,
+    "peak_amplitude": 0.843,
+    "warning": null,
+    "applied_gain_db": 0.0,
+    "samples_count": 31664,
+    "vad_fallback_used": false,
+    "chunking": {
+      "valid": true,
+      "session_id": "SESS-1791175267178",
+      "total_chunks_received": 2,
+      "missing_chunks_count": 0,
+      "total_duration_seconds": 1.979,
+      "assembled_wav_path": "uploads\\sessions\\SESS-1791175267178\\SESS-1791175267178_assembled.wav",
+      "sequence_integrity": true
+    }
+  },
+  "warning": null,
+  "missing_segments": 0,
+  "vad_fallback_used": false,
+  "original_text": "Satu, dua, tiga.",
+  "corrected_text": "Satu, dua, tiga.",
+  "corrections": [],
+  "segments": [
+    {
+      "start": 0.4,
+      "end": 2.4,
+      "text": "Satu, dua, tiga.",
+      "confidence": 0.7,
+      "speaker_id": "speaker_2",
+      "speaker_role": "patient",
+      "speaker": "Pasien",
+      "raw_text": "Satu, dua, tiga.",
+      "start_time": 0.4,
+      "end_time": 2.4,
+      "review_required": false,
+      "source": "patient"
+    }
+  ],
+  "chief_complaint": {
+    "value": null,
+    "body_part": null,
+    "onset": null,
+    "duration": null,
+    "severity": null,
+    "source": null,
+    "confidence": null,
+    "review_required": true
+  },
+  "symptoms": [],
+  "duration": null,
+  "vitals": {
+    "blood_pressure": null,
+    "temperature": null,
+    "spo2": null,
+    "pulse": null,
+    "respiratory_rate": null,
+    "weight": null,
+    "height": null,
+    "pain_scale": null
+  },
+  "allergies": {
+    "status": "not_asked",
+    "items": [],
+    "reactions": [],
+    "source": null,
+    "review_required": false,
+    "category": null
+  },
+  "medical_history": [],
+  "medications_mentioned": [],
+  "procedures_mentioned": [],
+  "uncategorized": [],
+  "confidence": {
+    "transcription": 0.95,
+    "speaker": 0.7,
+    "clinical_extraction": 0.5,
+    "normalization": 0.98,
+    "level": "RENDAH",
+    "score": 0,
+    "warnings": [
+      "Keluhan utama tidak terdeteksi — pastikan pasien menyebutkan gejalanya",
+      "Transcript terlalu pendek — coba rekam lebih lama"
+    ]
+  },
+  "review": {
+    "required": true,
+    "reasons": [
+      "Keluhan utama tidak ditemukan dalam tuturan pasien"
+    ]
+  },
+  "clinical_validation": {
+    "valid": true,
+    "issues": [],
+    "total_issues": 0
+  },
+  "review_status": "needs_review",
+  "raw_transcript": "Satu, dua, tiga.",
+  "layer1_phonetic": "Satu, dua, tiga.",
+  "cleaned_transcript": "Satu, dua, tiga.",
+  "labeled_segments": [
+    {
+      "start": 0.4,
+      "end": 2.4,
+      "text": "Satu, dua, tiga.",
+      "confidence": 0.7,
+      "speaker_id": "speaker_2",
+      "speaker_role": "patient",
+      "speaker": "Pasien",
+      "raw_text": "Satu, dua, tiga.",
+      "start_time": 0.4,
+      "end_time": 2.4,
+      "review_required": false,
+      "source": "patient"
+    }
+  ],
+  "clinical_entities": {
+    "vitals": {},
+    "extended_vitals": {
+      "blood_pressure": null,
+      "temperature": null,
+      "spo2": null,
+      "pulse": null,
+      "respiratory_rate": null,
+      "weight": null,
+      "height": null,
+      "pain_scale": null
+    },
+    "allergies": {
+      "ada_alergi": false,
+      "alergen": [],
+      "disangkal": false
+    },
+    "standardized_allergies": {
+      "status": "not_asked",
+      "items": [],
+      "reactions": [],
+      "source": null,
+      "review_required": false,
+      "category": null
+    },
+    "patient_turns": 1,
+    "doctor_turns": 0
+  },
+  "pipeline_layers": {
+    "L1_phonetic": "Satu, dua, tiga.",
+    "L2_indonesia": "Satu, dua, tiga.",
+    "L3_speakers": 1,
+    "L4_medical": {
+      "chief": "",
+      "secondary": [],
+      "structured_secondary": [],
+      "duration": "",
+      "vitals": {},
+      "allergies": {
+        "ada_alergi": false,
+        "alergen": [],
+        "disangkal": false
+      }
+    }
+  },
+  "fields": {
+    "keluhan_utama": "",
+    "keluhan_tambahan": "",
+    "lama_sakit": ""
+  },
+  "ml_classification": "KOSONG",
+  "timestamp": "2026-10-05T12:41:14.724075"
+}

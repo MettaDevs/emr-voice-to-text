@@ -1,0 +1,55 @@
+{
+  "benchmark_cases_count": 3,
+  "total_audio_seconds": 29.23,
+  "metrics": {
+    "word_error_rate_wer": 0.0364,
+    "character_error_rate_cer": 0.029,
+    "audio_coverage_rate": 1.0,
+    "empty_transcription_rate": 0.0,
+    "speech_detection_rate": 1.0,
+    "chunk_loss_rate": 0.0,
+    "avg_transcription_latency_seconds": 1.08,
+    "real_time_factor_rtf": 0.111
+  },
+  "case_details": [
+    {
+      "id": "AUDIO-CASE-01",
+      "file": "sample_1_kepala_pipi.mp3",
+      "reference": "Selamat pagi, pak. Keluhannya apa? Eh, kepala saya sakit. Terus di atas pipi saya sakit.",
+      "hypothesis": "Selamat pagi pak, keluhannya apa? Eh, kepala saya sakit. Terus di atas pipi saya sakit.",
+      "wer": 0.0,
+      "cer": 0.027,
+      "duration_s": 8.38,
+      "latency_s": 1.59,
+      "rms_dbfs": -20.41,
+      "audio_status": "OPTIMAL",
+      "vad_fallback": false
+    },
+    {
+      "id": "AUDIO-CASE-02",
+      "file": "sample_2_perut_meriang.mp3",
+      "reference": "Ada keluhan apa bu hari ini? Anu dok, perut saya melilit dari kemarin malam, terus badan agak meriang dan mual.",
+      "hypothesis": "Ada keluhan apa bu hari ini? Anu dok, perut saya melilit dari kemarin malam, terus badan agak meriang dan mual.",
+      "wer": 0.0,
+      "cer": 0.0,
+      "duration_s": 10.22,
+      "latency_s": 0.82,
+      "rms_dbfs": -19.71,
+      "audio_status": "OPTIMAL",
+      "vad_fallback": false
+    },
+    {
+      "id": "AUDIO-CASE-03",
+      "file": "sample_3_batuk_sesak.mp3",
+      "reference": "Bisa diceritakan keluhan utamanya apa? Eh, ini dok. Batuk kering sudah tiga hari, terus tenggorokan rasanya gatal dan agak sesak.",
+      "hypothesis": "Bisa diceritakan keluhan utamanya apa? Ini dok, batuk kering sudah tiga hari, terus tengurokan rasanya gatal dan agak sesak.",
+      "wer": 0.1,
+      "cer": 0.0545,
+      "duration_s": 10.63,
+      "latency_s": 0.83,
+      "rms_dbfs": -20.15,
+      "audio_status": "OPTIMAL",
+      "vad_fallback": false
+    }
+  ]
+}

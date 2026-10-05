@@ -1,0 +1,36 @@
+{
+  "status": "success",
+  "session_id": "VA-1790237690",
+  "audio_file": "rec_1790237689.webm",
+  "audio_url": "/audio/rec_1790237689.webm",
+  "audio_duration": 1.74,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 0.81,
+  "total_time": 0.81,
+  "raw_transcript": "Ya.",
+  "cleaned_transcript": "Ya.",
+  "labeled_segments": [
+    {
+      "start": 0.4,
+      "end": 1.4,
+      "text": "Ya.",
+      "speaker": "Pasien"
+    }
+  ],
+  "fields": {
+    "keluhan_utama": "",
+    "keluhan_tambahan": "",
+    "lama_sakit": ""
+  },
+  "confidence": {
+    "level": "RENDAH",
+    "score": 0,
+    "warnings": [
+      "Keluhan utama tidak terdeteksi — pastikan pasien menyebutkan gejalanya",
+      "Transcript terlalu pendek — rekaman mungkin terlalu singkat atau tidak jelas"
+    ]
+  },
+  "ml_classification": "KLINIS_KOMPREHENSIF",
+  "timestamp": "2026-09-24T16:14:50.095774"
+}

@@ -1,0 +1,123 @@
+{
+  "status": "success",
+  "session_id": "VA-1790661431",
+  "audio_file": "rec_1790661428.webm",
+  "audio_url": "/audio/rec_1790661428.webm",
+  "audio_duration": 27.3,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 2.58,
+  "total_time": 2.6,
+  "raw_transcript": "Kalau boleh tahu keluhannya apa ya, Bu? Ini dok saya pusing dari kemarin. Sama ada panas juga sama pilek. Kayak demam gitu. Kalau boleh tau dari kapan ya? Dari kemaren aja atau gimana? Iya Dok, dari kemaring malam. Untuk alergi obatnya Ibu ada. Untung alergia aman sih saya, Dok.",
+  "layer1_phonetic": "Kalau boleh tahu keluhannya apa ya, Bu? Ini dok saya pusing dari kemarin. Sama ada panas juga sama pilek. Kayak demam gitu. kalau boleh tahu dari kapan ya? Dari kemarin aja atau gimana? Iya Dok, dari kemarin malam. Untuk alergi obatnya Ibu ada. Untung alergi aman sih saya, Dok.",
+  "cleaned_transcript": "Kalau boleh tahu keluhannya apa ya, Bu? Ini dok saya pusing dari kemarin. Sama ada panas juga sama pilek. demam. kalau boleh tahu dari kapan ya? Dari kemarin saja atau bagaimana? iya dok, dari kemarin malam. Untuk alergi obatnya Ibu ada. Untung alergi aman saya, Dok.",
+  "labeled_segments": [
+    {
+      "start": 1.43,
+      "end": 5.22,
+      "text": "Kalau boleh tahu keluhannya apa ya, Bu?",
+      "raw_text": "Kalau boleh tahu keluhannya apa ya, Bu?",
+      "speaker": "Dokter"
+    },
+    {
+      "start": 5.22,
+      "end": 8.42,
+      "text": "Ini dok saya pusing dari kemarin.",
+      "raw_text": "Ini dok saya pusing dari kemarin.",
+      "speaker": "Pasien"
+    },
+    {
+      "start": 8.42,
+      "end": 11.43,
+      "text": "Sama ada panas juga sama pilek.",
+      "raw_text": "Sama ada panas juga sama pilek.",
+      "speaker": "Pasien"
+    },
+    {
+      "start": 11.43,
+      "end": 13.08,
+      "text": "Demam.",
+      "raw_text": "Kayak demam gitu.",
+      "speaker": "Pasien"
+    },
+    {
+      "start": 13.08,
+      "end": 15.75,
+      "text": "Kalau boleh tahu dari kapan ya?",
+      "raw_text": "Kalau boleh tau dari kapan ya?",
+      "speaker": "Dokter"
+    },
+    {
+      "start": 15.75,
+      "end": 18.33,
+      "text": "Dari kemarin saja atau bagaimana?",
+      "raw_text": "Dari kemaren aja atau gimana?",
+      "speaker": "Dokter"
+    },
+    {
+      "start": 18.33,
+      "end": 20.91,
+      "text": "Iya dok, dari kemarin malam.",
+      "raw_text": "Iya Dok, dari kemaring malam.",
+      "speaker": "Pasien"
+    },
+    {
+      "start": 20.91,
+      "end": 23.49,
+      "text": "Untuk alergi obatnya Ibu ada.",
+      "raw_text": "Untuk alergi obatnya Ibu ada.",
+      "speaker": "Dokter"
+    },
+    {
+      "start": 23.49,
+      "end": 26.51,
+      "text": "Untung alergi aman saya, Dok.",
+      "raw_text": "Untung alergia aman sih saya, Dok.",
+      "speaker": "Pasien"
+    }
+  ],
+  "clinical_entities": {
+    "vitals": {},
+    "allergies": {
+      "ada_alergi": false,
+      "alergen": [],
+      "disangkal": true
+    },
+    "patient_turns": 5,
+    "doctor_turns": 4
+  },
+  "pipeline_layers": {
+    "L1_phonetic": "Kalau boleh tahu keluhannya apa ya, Bu? Ini dok saya pusing dari kemarin. Sama ada panas juga sama pilek. Kayak demam gitu. kalau boleh tahu dari kapan ya? Dari kemarin aja atau gimana? Iya Dok, dari kemarin malam. Untuk alergi obatnya Ibu ada. Untung alergi aman sih saya, Dok.",
+    "L2_indonesia": "Kalau boleh tahu keluhannya apa ya, Bu? Ini dok saya pusing dari kemarin. Sama ada panas juga sama pilek. demam. kalau boleh tahu dari kapan ya? Dari kemarin saja atau bagaimana? iya dok, dari kemarin malam. Untuk alergi obatnya Ibu ada. Untung alergi aman saya, Dok.",
+    "L3_speakers": 9,
+    "L4_medical": {
+      "chief": "Pusing",
+      "secondary": [
+        "Pilek"
+      ],
+      "structured_secondary": [
+        "Pilek",
+        "Alergi: Disangkal"
+      ],
+      "duration": "Dari Kemarin Malam",
+      "vitals": {},
+      "allergies": {
+        "ada_alergi": false,
+        "alergen": [],
+        "disangkal": true
+      }
+    }
+  },
+  "fields": {
+    "keluhan_utama": "Pusing",
+    "keluhan_tambahan": "Pilek, Alergi: Disangkal",
+    "lama_sakit": "Dari Kemarin Malam"
+  },
+  "confidence": {
+    "level": "TINGGI",
+    "score": 100,
+    "warnings": []
+  },
+  "ml_classification": "KLINIS",
+  "timestamp": "2026-09-29T13:57:11.079043"
+}

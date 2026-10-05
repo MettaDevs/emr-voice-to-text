@@ -1,0 +1,78 @@
+{
+  "status": "success",
+  "session_id": "VA-1790871870",
+  "audio_file": "rec_1790871869.webm",
+  "audio_url": "/audio/rec_1790871869.webm",
+  "audio_duration": 27.72,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 1.2,
+  "total_time": 1.2,
+  "raw_transcript": "Sekarang mau ngecek aja, udah lama soalnya. Kalau boleh tahu ibunya ada alergi? Mereka sih dekul-alergia.",
+  "layer1_phonetic": "Sekarang mau ngecek aja, udah lama soalnya. Kalau boleh tahu ibunya ada alergi? Mereka sih dekul-alergi.",
+  "cleaned_transcript": "Sekarang mau ngecek saja, sudah lama soalnya. Kalau boleh tahu ibunya ada alergi? Mereka dekul-alergi.",
+  "labeled_segments": [
+    {
+      "start": 1.14,
+      "end": 12.04,
+      "text": "Sekarang mau ngecek saja, sudah lama soalnya.",
+      "raw_text": "Sekarang mau ngecek aja, udah lama soalnya.",
+      "speaker": "Pasien"
+    },
+    {
+      "start": 12.04,
+      "end": 20.92,
+      "text": "Kalau boleh tahu ibunya ada alergi?",
+      "raw_text": "Kalau boleh tahu ibunya ada alergi?",
+      "speaker": "Dokter"
+    },
+    {
+      "start": 20.92,
+      "end": 27.26,
+      "text": "Mereka dekul-alergi.",
+      "raw_text": "Mereka sih dekul-alergia.",
+      "speaker": "Pasien"
+    }
+  ],
+  "clinical_entities": {
+    "vitals": {},
+    "allergies": {
+      "ada_alergi": false,
+      "alergen": [],
+      "disangkal": false
+    },
+    "patient_turns": 2,
+    "doctor_turns": 1
+  },
+  "pipeline_layers": {
+    "L1_phonetic": "Sekarang mau ngecek aja, udah lama soalnya. Kalau boleh tahu ibunya ada alergi? Mereka sih dekul-alergi.",
+    "L2_indonesia": "Sekarang mau ngecek saja, sudah lama soalnya. Kalau boleh tahu ibunya ada alergi? Mereka dekul-alergi.",
+    "L3_speakers": 3,
+    "L4_medical": {
+      "chief": "",
+      "secondary": [],
+      "structured_secondary": [],
+      "duration": "",
+      "vitals": {},
+      "allergies": {
+        "ada_alergi": false,
+        "alergen": [],
+        "disangkal": false
+      }
+    }
+  },
+  "fields": {
+    "keluhan_utama": "",
+    "keluhan_tambahan": "",
+    "lama_sakit": ""
+  },
+  "confidence": {
+    "level": "RENDAH",
+    "score": 0,
+    "warnings": [
+      "Keluhan utama tidak terdeteksi — pastikan pasien menyebutkan gejalanya"
+    ]
+  },
+  "ml_classification": "KOSONG",
+  "timestamp": "2026-10-02T00:24:30.964616"
+}

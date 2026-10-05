@@ -1,0 +1,48 @@
+{
+  "status": "success",
+  "session_id": "VA-1790312529",
+  "audio_file": "rec_1790312528.webm",
+  "audio_url": "/audio/rec_1790312528.webm",
+  "audio_duration": 2.1,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 0.74,
+  "total_time": 0.74,
+  "raw_transcript": "Kimun Morgan",
+  "layer1_phonetic": "Kimun Morgan",
+  "cleaned_transcript": "Kimun Morgan",
+  "labeled_segments": [
+    {
+      "start": 0.0,
+      "end": 2.43,
+      "text": "Kimun Morgan",
+      "raw_text": "Kimun Morgan",
+      "speaker": "Pasien"
+    }
+  ],
+  "pipeline_layers": {
+    "L1_phonetic": "Kimun Morgan",
+    "L2_indonesia": "Kimun Morgan",
+    "L3_speakers": 1,
+    "L4_medical": {
+      "chief": "",
+      "secondary": [],
+      "duration": ""
+    }
+  },
+  "fields": {
+    "keluhan_utama": "",
+    "keluhan_tambahan": "",
+    "lama_sakit": ""
+  },
+  "confidence": {
+    "level": "RENDAH",
+    "score": 0,
+    "warnings": [
+      "Keluhan utama tidak terdeteksi — pastikan pasien menyebutkan gejalanya",
+      "Transcript terlalu pendek — coba rekam lebih lama"
+    ]
+  },
+  "ml_classification": "KOSONG",
+  "timestamp": "2026-09-25T13:02:09.483157"
+}

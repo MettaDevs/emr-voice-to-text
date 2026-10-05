@@ -1,0 +1,47 @@
+{
+  "status": "success",
+  "session_id": "VA-1790312744",
+  "audio_file": "rec_1790312743.webm",
+  "audio_url": "/audio/rec_1790312743.webm",
+  "audio_duration": 4.68,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 0.97,
+  "total_time": 0.97,
+  "raw_transcript": "Mang Kimun sakit panas dan pilek dari dua hari yang lalu.",
+  "layer1_phonetic": "Mang Kimun sakit panas dan pilek dari dua hari yang lalu.",
+  "cleaned_transcript": "Mang Kimun sakit panas dan pilek dari dua hari yang lalu.",
+  "labeled_segments": [
+    {
+      "start": 0.0,
+      "end": 4.3,
+      "text": "Mang Kimun sakit panas dan pilek dari dua hari yang lalu.",
+      "raw_text": "Mang Kimun sakit panas dan pilek dari dua hari yang lalu.",
+      "speaker": "Pasien"
+    }
+  ],
+  "pipeline_layers": {
+    "L1_phonetic": "Mang Kimun sakit panas dan pilek dari dua hari yang lalu.",
+    "L2_indonesia": "Mang Kimun sakit panas dan pilek dari dua hari yang lalu.",
+    "L3_speakers": 1,
+    "L4_medical": {
+      "chief": "Demam / Panas",
+      "secondary": [
+        "Pilek"
+      ],
+      "duration": ""
+    }
+  },
+  "fields": {
+    "keluhan_utama": "Demam / Panas",
+    "keluhan_tambahan": "Pilek",
+    "lama_sakit": ""
+  },
+  "confidence": {
+    "level": "SEDANG",
+    "score": 40,
+    "warnings": []
+  },
+  "ml_classification": "KLINIS",
+  "timestamp": "2026-09-25T13:05:44.043109"
+}

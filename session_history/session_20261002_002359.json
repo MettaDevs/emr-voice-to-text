@@ -1,0 +1,65 @@
+{
+  "status": "success",
+  "session_id": "VA-1790871839",
+  "audio_file": "rec_1790871838.webm",
+  "audio_url": "/audio/rec_1790871838.webm",
+  "audio_duration": 2.16,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 0.75,
+  "total_time": 0.75,
+  "raw_transcript": "Selamat malam.",
+  "layer1_phonetic": "Selamat malam.",
+  "cleaned_transcript": "Selamat malam.",
+  "labeled_segments": [
+    {
+      "start": 0.0,
+      "end": 2.0,
+      "text": "Selamat malam.",
+      "raw_text": "Selamat malam.",
+      "speaker": "Dokter"
+    }
+  ],
+  "clinical_entities": {
+    "vitals": {},
+    "allergies": {
+      "ada_alergi": false,
+      "alergen": [],
+      "disangkal": false
+    },
+    "patient_turns": 0,
+    "doctor_turns": 1
+  },
+  "pipeline_layers": {
+    "L1_phonetic": "Selamat malam.",
+    "L2_indonesia": "Selamat malam.",
+    "L3_speakers": 1,
+    "L4_medical": {
+      "chief": "",
+      "secondary": [],
+      "structured_secondary": [],
+      "duration": "",
+      "vitals": {},
+      "allergies": {
+        "ada_alergi": false,
+        "alergen": [],
+        "disangkal": false
+      }
+    }
+  },
+  "fields": {
+    "keluhan_utama": "",
+    "keluhan_tambahan": "",
+    "lama_sakit": ""
+  },
+  "confidence": {
+    "level": "RENDAH",
+    "score": 0,
+    "warnings": [
+      "Keluhan utama tidak terdeteksi — pastikan pasien menyebutkan gejalanya",
+      "Transcript terlalu pendek — coba rekam lebih lama"
+    ]
+  },
+  "ml_classification": "KOSONG",
+  "timestamp": "2026-10-02T00:23:59.619972"
+}

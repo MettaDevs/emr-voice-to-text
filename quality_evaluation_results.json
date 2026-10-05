@@ -1,0 +1,36 @@
+{
+  "dataset_size": 17,
+  "clinical_extraction": {
+    "true_positives": 10,
+    "false_positives": 2,
+    "false_negatives": 4,
+    "precision": 0.8333,
+    "recall": 0.7143,
+    "f1_score": 0.7692
+  },
+  "negation_accuracy": {
+    "correct": 6,
+    "total": 6,
+    "rate": 1.0
+  },
+  "vitals_extraction_accuracy": {
+    "correct": 2,
+    "total": 2,
+    "rate": 1.0
+  },
+  "allergy_accuracy": {
+    "correct": 4,
+    "total": 4,
+    "rate": 1.0
+  },
+  "duration_accuracy": {
+    "correct": 9,
+    "total": 9,
+    "rate": 1.0
+  },
+  "field_completeness_rate": 0.7059,
+  "emr_integration": {
+    "transmission_success_rate": 1.0,
+    "idempotent_duplicate_rate": 1.0
+  }
+}

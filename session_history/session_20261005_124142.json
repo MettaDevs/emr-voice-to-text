@@ -1,0 +1,197 @@
+{
+  "status": "success",
+  "session_id": "EMR-1791175302",
+  "session_metadata": {
+    "session_id": "EMR-1791175302",
+    "timestamp": "2026-10-05T12:41:42.563160",
+    "audio_file": "",
+    "audio_duration": 0.0,
+    "language": "id"
+  },
+  "audio_file": "SESS-1791175283145_assembled.wav",
+  "audio_url": null,
+  "audio_duration": 1.98,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 1.95,
+  "total_time": 1.95,
+  "audio_status": "OPTIMAL",
+  "transcription_status": "success",
+  "audio_diagnostics": {
+    "valid": true,
+    "status": "OPTIMAL",
+    "file_size_bytes": 63372,
+    "duration_seconds": 1.979,
+    "source_codec": "pcm_s16le",
+    "source_sample_rate": 16000,
+    "source_channels": 1,
+    "target_sample_rate": 16000,
+    "target_channels": 1,
+    "rms_dbfs": -26.11,
+    "peak_amplitude": 0.3503,
+    "warning": null,
+    "applied_gain_db": 0.0,
+    "samples_count": 31664,
+    "vad_fallback_used": false,
+    "chunking": {
+      "valid": true,
+      "session_id": "SESS-1791175283145",
+      "total_chunks_received": 9,
+      "missing_chunks_count": 0,
+      "total_duration_seconds": 1.979,
+      "assembled_wav_path": "uploads\\sessions\\SESS-1791175283145\\SESS-1791175283145_assembled.wav",
+      "sequence_integrity": true
+    }
+  },
+  "warning": null,
+  "missing_segments": 0,
+  "vad_fallback_used": false,
+  "original_text": "Tidak ada riwayat alam.",
+  "corrected_text": "Tidak ada riwayat alam.",
+  "corrections": [],
+  "segments": [
+    {
+      "start": 0.24,
+      "end": 2.24,
+      "text": "Tidak ada riwayat alam.",
+      "confidence": 0.95,
+      "speaker_id": "speaker_1",
+      "speaker_role": "doctor",
+      "speaker": "Dokter",
+      "raw_text": "Tidak ada riwayat alam.",
+      "start_time": 0.24,
+      "end_time": 2.24,
+      "review_required": false,
+      "source": "doctor"
+    }
+  ],
+  "chief_complaint": {
+    "value": null,
+    "body_part": null,
+    "onset": null,
+    "duration": null,
+    "severity": null,
+    "source": null,
+    "confidence": null,
+    "review_required": true
+  },
+  "symptoms": [],
+  "duration": null,
+  "vitals": {
+    "blood_pressure": null,
+    "temperature": null,
+    "spo2": null,
+    "pulse": null,
+    "respiratory_rate": null,
+    "weight": null,
+    "height": null,
+    "pain_scale": null
+  },
+  "allergies": {
+    "status": "not_asked",
+    "items": [],
+    "reactions": [],
+    "source": null,
+    "review_required": false,
+    "category": null
+  },
+  "medical_history": [],
+  "medications_mentioned": [],
+  "procedures_mentioned": [],
+  "uncategorized": [],
+  "confidence": {
+    "transcription": 0.95,
+    "speaker": 0.95,
+    "clinical_extraction": 0.5,
+    "normalization": 0.98,
+    "level": "RENDAH",
+    "score": 0,
+    "warnings": [
+      "Keluhan utama tidak terdeteksi — pastikan pasien menyebutkan gejalanya",
+      "Transcript terlalu pendek — coba rekam lebih lama"
+    ]
+  },
+  "review": {
+    "required": true,
+    "reasons": [
+      "Keluhan utama tidak ditemukan dalam tuturan pasien"
+    ]
+  },
+  "clinical_validation": {
+    "valid": true,
+    "issues": [],
+    "total_issues": 0
+  },
+  "review_status": "needs_review",
+  "raw_transcript": "Tidak ada riwayat alam.",
+  "layer1_phonetic": "Tidak ada riwayat alam.",
+  "cleaned_transcript": "Tidak ada riwayat alam.",
+  "labeled_segments": [
+    {
+      "start": 0.24,
+      "end": 2.24,
+      "text": "Tidak ada riwayat alam.",
+      "confidence": 0.95,
+      "speaker_id": "speaker_1",
+      "speaker_role": "doctor",
+      "speaker": "Dokter",
+      "raw_text": "Tidak ada riwayat alam.",
+      "start_time": 0.24,
+      "end_time": 2.24,
+      "review_required": false,
+      "source": "doctor"
+    }
+  ],
+  "clinical_entities": {
+    "vitals": {},
+    "extended_vitals": {
+      "blood_pressure": null,
+      "temperature": null,
+      "spo2": null,
+      "pulse": null,
+      "respiratory_rate": null,
+      "weight": null,
+      "height": null,
+      "pain_scale": null
+    },
+    "allergies": {
+      "ada_alergi": false,
+      "alergen": [],
+      "disangkal": false
+    },
+    "standardized_allergies": {
+      "status": "not_asked",
+      "items": [],
+      "reactions": [],
+      "source": null,
+      "review_required": false,
+      "category": null
+    },
+    "patient_turns": 0,
+    "doctor_turns": 1
+  },
+  "pipeline_layers": {
+    "L1_phonetic": "Tidak ada riwayat alam.",
+    "L2_indonesia": "Tidak ada riwayat alam.",
+    "L3_speakers": 1,
+    "L4_medical": {
+      "chief": "",
+      "secondary": [],
+      "structured_secondary": [],
+      "duration": "",
+      "vitals": {},
+      "allergies": {
+        "ada_alergi": false,
+        "alergen": [],
+        "disangkal": false
+      }
+    }
+  },
+  "fields": {
+    "keluhan_utama": "",
+    "keluhan_tambahan": "",
+    "lama_sakit": ""
+  },
+  "ml_classification": "KOSONG",
+  "timestamp": "2026-10-05T12:41:42.563996"
+}

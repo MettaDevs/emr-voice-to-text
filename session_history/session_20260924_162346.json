@@ -1,0 +1,36 @@
+{
+  "status": "success",
+  "session_id": "VA-1790238226",
+  "audio_file": "rec_1790238225.mp3",
+  "audio_url": "/audio/rec_1790238225.mp3",
+  "audio_duration": 91.43,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 1.23,
+  "total_time": 1.23,
+  "raw_transcript": "Oh, I am so sorry guys.",
+  "cleaned_transcript": "Oh, I am so sorry guys.",
+  "labeled_segments": [
+    {
+      "start": 0.0,
+      "end": 2.0,
+      "text": "Oh, I am so sorry guys.",
+      "speaker": "Pasien"
+    }
+  ],
+  "fields": {
+    "keluhan_utama": "",
+    "keluhan_tambahan": "",
+    "lama_sakit": ""
+  },
+  "confidence": {
+    "level": "RENDAH",
+    "score": 0,
+    "warnings": [
+      "Keluhan utama tidak terdeteksi — pastikan pasien menyebutkan gejalanya",
+      "Transcript terlalu pendek — rekaman mungkin terlalu singkat atau tidak jelas"
+    ]
+  },
+  "ml_classification": "KLINIS_KOMPREHENSIF",
+  "timestamp": "2026-09-24T16:23:46.359170"
+}

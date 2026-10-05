@@ -1,0 +1,54 @@
+{
+  "status": "success",
+  "session_id": "VA-1790657258",
+  "audio_file": "rec_1790657256.webm",
+  "audio_url": "/audio/rec_1790657256.webm",
+  "audio_duration": 27.3,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 1.92,
+  "total_time": 1.93,
+  "raw_transcript": "Kalau boleh tahu keluhannya apa ya, Bu? Ini dok saya pusing dari kemarin. Sama ada panas juga sama pilek. Kayak demam gitu. Kalau boleh tau dari kapan ya? Dari kemaren aja atau gimana? Iya Dok, dari kemalen malam. Untuk alergi obatnya ibu ada. Untung alergia aman sih saya dok.",
+  "layer1_phonetic": "Kalau boleh tahu keluhannya apa ya, Bu? Ini dok saya pusing dari kemarin. Sama ada panas juga sama pilek. Kayak demam gitu. Kalau boleh tau dari kapan ya? Dari kemarin aja atau gimana? Iya Dok, dari kemalen malam. Untuk alergi obatnya ibu ada. Untung alergia aman sih saya dok.",
+  "cleaned_transcript": "Kalau boleh tahu keluhannya apa ya, Bu? Ini dok saya pusing dari kemarin. Sama ada panas juga sama pilek. demam. Kalau boleh tau dari kapan ya? Dari kemarin saja atau bagaimana? iya dok, dari kemalen malam. Untuk alergi obatnya ibu ada. Untung alergia aman saya dok.",
+  "labeled_segments": [
+    {
+      "start": 1.36,
+      "end": 12.19,
+      "text": "Kalau boleh tahu keluhannya apa ya, Bu? Ini dok saya pusing dari kemarin. Sama ada panas juga sama pilek. demam.",
+      "raw_text": "Kalau boleh tahu keluhannya apa ya, Bu? Ini dok saya pusing dari kemarin. Sama ada panas juga sama pilek. Kayak demam gitu.",
+      "speaker": "Dokter"
+    },
+    {
+      "start": 13.74,
+      "end": 26.35,
+      "text": "Kalau boleh tau dari kapan ya? Dari kemarin saja atau bagaimana? iya dok, dari kemalen malam. Untuk alergi obatnya ibu ada. Untung alergia aman saya dok.",
+      "raw_text": "Kalau boleh tau dari kapan ya? Dari kemaren aja atau gimana? Iya Dok, dari kemalen malam. Untuk alergi obatnya ibu ada. Untung alergia aman sih saya dok.",
+      "speaker": "Dokter"
+    }
+  ],
+  "pipeline_layers": {
+    "L1_phonetic": "Kalau boleh tahu keluhannya apa ya, Bu? Ini dok saya pusing dari kemarin. Sama ada panas juga sama pilek. Kayak demam gitu. Kalau boleh tau dari kapan ya? Dari kemarin aja atau gimana? Iya Dok, dari kemalen malam. Untuk alergi obatnya ibu ada. Untung alergia aman sih saya dok.",
+    "L2_indonesia": "Kalau boleh tahu keluhannya apa ya, Bu? Ini dok saya pusing dari kemarin. Sama ada panas juga sama pilek. demam. Kalau boleh tau dari kapan ya? Dari kemarin saja atau bagaimana? iya dok, dari kemalen malam. Untuk alergi obatnya ibu ada. Untung alergia aman saya dok.",
+    "L3_speakers": 2,
+    "L4_medical": {
+      "chief": "Pusing",
+      "secondary": [
+        "Pilek"
+      ],
+      "duration": "Dari Kemarin"
+    }
+  },
+  "fields": {
+    "keluhan_utama": "Pusing",
+    "keluhan_tambahan": "Pilek",
+    "lama_sakit": "Dari Kemarin"
+  },
+  "confidence": {
+    "level": "TINGGI",
+    "score": 95,
+    "warnings": []
+  },
+  "ml_classification": "KLINIS",
+  "timestamp": "2026-09-29T12:47:38.674116"
+}

@@ -1,0 +1,65 @@
+{
+  "status": "success",
+  "session_id": "VA-1790919230",
+  "audio_file": "rec_1790919229.webm",
+  "audio_url": "/audio/rec_1790919229.webm",
+  "audio_duration": 1.8,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 0.77,
+  "total_time": 0.77,
+  "raw_transcript": "Malam.",
+  "layer1_phonetic": "Malam.",
+  "cleaned_transcript": "Malam.",
+  "labeled_segments": [
+    {
+      "start": 0.41,
+      "end": 1.41,
+      "text": "Malam.",
+      "raw_text": "Malam.",
+      "speaker": "Pasien"
+    }
+  ],
+  "clinical_entities": {
+    "vitals": {},
+    "allergies": {
+      "ada_alergi": false,
+      "alergen": [],
+      "disangkal": false
+    },
+    "patient_turns": 1,
+    "doctor_turns": 0
+  },
+  "pipeline_layers": {
+    "L1_phonetic": "Malam.",
+    "L2_indonesia": "Malam.",
+    "L3_speakers": 1,
+    "L4_medical": {
+      "chief": "",
+      "secondary": [],
+      "structured_secondary": [],
+      "duration": "",
+      "vitals": {},
+      "allergies": {
+        "ada_alergi": false,
+        "alergen": [],
+        "disangkal": false
+      }
+    }
+  },
+  "fields": {
+    "keluhan_utama": "",
+    "keluhan_tambahan": "",
+    "lama_sakit": ""
+  },
+  "confidence": {
+    "level": "RENDAH",
+    "score": 0,
+    "warnings": [
+      "Keluhan utama tidak terdeteksi — pastikan pasien menyebutkan gejalanya",
+      "Transcript terlalu pendek — coba rekam lebih lama"
+    ]
+  },
+  "ml_classification": "KOSONG",
+  "timestamp": "2026-10-02T13:33:50.251634"
+}

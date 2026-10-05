@@ -1,0 +1,80 @@
+{
+  "status": "success",
+  "session_id": "VA-1790872909",
+  "audio_file": "rec_1790872907.mp3",
+  "audio_url": "/audio/rec_1790872907.mp3",
+  "audio_duration": 10.22,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 2.17,
+  "total_time": 2.19,
+  "raw_transcript": "Ada keluhan apa bu hari ini? Anu Dok, perut saya melilit dari kemarin malam. terus badan agak meriang dan mual.'",
+  "layer1_phonetic": "Ada keluhan apa bu hari ini? Anu Dok, perut saya melilit dari kemarin malam. terus badan agak meriang dan mual.'",
+  "cleaned_transcript": "Ada keluhan apa bu hari ini? Dok, perut saya melilit dari kemarin malam. terus badan agak meriang dan mual.'",
+  "labeled_segments": [
+    {
+      "start": 0.06,
+      "end": 2.4,
+      "text": "Ada keluhan apa bu hari ini?",
+      "raw_text": "Ada keluhan apa bu hari ini?",
+      "speaker": "Dokter"
+    },
+    {
+      "start": 2.4,
+      "end": 6.32,
+      "text": "Dok, perut saya melilit dari kemarin malam.",
+      "raw_text": "Anu Dok, perut saya melilit dari kemarin malam.",
+      "speaker": "Pasien"
+    },
+    {
+      "start": 6.32,
+      "end": 9.24,
+      "text": "Terus badan agak meriang dan mual.'",
+      "raw_text": "terus badan agak meriang dan mual.'",
+      "speaker": "Pasien"
+    }
+  ],
+  "clinical_entities": {
+    "vitals": {},
+    "allergies": {
+      "ada_alergi": false,
+      "alergen": [],
+      "disangkal": false
+    },
+    "patient_turns": 2,
+    "doctor_turns": 1
+  },
+  "pipeline_layers": {
+    "L1_phonetic": "Ada keluhan apa bu hari ini? Anu Dok, perut saya melilit dari kemarin malam. terus badan agak meriang dan mual.'",
+    "L2_indonesia": "Ada keluhan apa bu hari ini? Dok, perut saya melilit dari kemarin malam. terus badan agak meriang dan mual.'",
+    "L3_speakers": 3,
+    "L4_medical": {
+      "chief": "Mual",
+      "secondary": [
+        "Meriang"
+      ],
+      "structured_secondary": [
+        "Meriang"
+      ],
+      "duration": "Dari Kemarin Malam",
+      "vitals": {},
+      "allergies": {
+        "ada_alergi": false,
+        "alergen": [],
+        "disangkal": false
+      }
+    }
+  },
+  "fields": {
+    "keluhan_utama": "Mual",
+    "keluhan_tambahan": "Meriang",
+    "lama_sakit": "Dari Kemarin Malam"
+  },
+  "confidence": {
+    "level": "TINGGI",
+    "score": 100,
+    "warnings": []
+  },
+  "ml_classification": "KLINIS",
+  "timestamp": "2026-10-02T00:41:49.293740"
+}

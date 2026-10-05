@@ -1,0 +1,166 @@
+{
+  "status": "success",
+  "session_id": "EMR-1790923582",
+  "session_metadata": {
+    "session_id": "EMR-1790923582",
+    "timestamp": "2026-10-02T14:46:22.659130",
+    "audio_file": "",
+    "audio_duration": 0.0,
+    "language": "id"
+  },
+  "audio_file": "rec_1790923581.webm",
+  "audio_url": "/audio/rec_1790923581.webm",
+  "audio_duration": 1.8,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 0.8,
+  "total_time": 0.8,
+  "original_text": "Selamat pagi.",
+  "corrected_text": "Selamat pagi.",
+  "corrections": [],
+  "segments": [
+    {
+      "start": 0.23,
+      "end": 2.23,
+      "text": "Selamat pagi.",
+      "confidence": 0.95,
+      "speaker_id": "speaker_1",
+      "speaker_role": "doctor",
+      "speaker": "Dokter",
+      "raw_text": "Selamat pagi.",
+      "start_time": 0.23,
+      "end_time": 2.23,
+      "review_required": false,
+      "source": "doctor"
+    }
+  ],
+  "chief_complaint": {
+    "value": null,
+    "body_part": null,
+    "onset": null,
+    "duration": null,
+    "severity": null,
+    "source": null,
+    "confidence": null,
+    "review_required": true
+  },
+  "symptoms": [],
+  "duration": null,
+  "vitals": {
+    "blood_pressure": null,
+    "temperature": null,
+    "spo2": null,
+    "pulse": null,
+    "respiratory_rate": null,
+    "weight": null,
+    "height": null,
+    "pain_scale": null
+  },
+  "allergies": {
+    "status": "not_asked",
+    "items": [],
+    "reactions": [],
+    "source": null,
+    "review_required": false,
+    "category": null
+  },
+  "medical_history": [],
+  "medications_mentioned": [],
+  "procedures_mentioned": [],
+  "uncategorized": [],
+  "confidence": {
+    "transcription": 0.95,
+    "speaker": 0.95,
+    "clinical_extraction": 0.5,
+    "normalization": 0.98,
+    "level": "RENDAH",
+    "score": 0,
+    "warnings": [
+      "Keluhan utama tidak terdeteksi — pastikan pasien menyebutkan gejalanya",
+      "Transcript terlalu pendek — coba rekam lebih lama"
+    ]
+  },
+  "review": {
+    "required": true,
+    "reasons": [
+      "Keluhan utama tidak ditemukan dalam tuturan pasien"
+    ]
+  },
+  "clinical_validation": {
+    "valid": true,
+    "issues": [],
+    "total_issues": 0
+  },
+  "review_status": "needs_review",
+  "raw_transcript": "Selamat pagi.",
+  "layer1_phonetic": "Selamat pagi.",
+  "cleaned_transcript": "Selamat pagi.",
+  "labeled_segments": [
+    {
+      "start": 0.23,
+      "end": 2.23,
+      "text": "Selamat pagi.",
+      "confidence": 0.95,
+      "speaker_id": "speaker_1",
+      "speaker_role": "doctor",
+      "speaker": "Dokter",
+      "raw_text": "Selamat pagi.",
+      "start_time": 0.23,
+      "end_time": 2.23,
+      "review_required": false,
+      "source": "doctor"
+    }
+  ],
+  "clinical_entities": {
+    "vitals": {},
+    "extended_vitals": {
+      "blood_pressure": null,
+      "temperature": null,
+      "spo2": null,
+      "pulse": null,
+      "respiratory_rate": null,
+      "weight": null,
+      "height": null,
+      "pain_scale": null
+    },
+    "allergies": {
+      "ada_alergi": false,
+      "alergen": [],
+      "disangkal": false
+    },
+    "standardized_allergies": {
+      "status": "not_asked",
+      "items": [],
+      "reactions": [],
+      "source": null,
+      "review_required": false,
+      "category": null
+    },
+    "patient_turns": 0,
+    "doctor_turns": 1
+  },
+  "pipeline_layers": {
+    "L1_phonetic": "Selamat pagi.",
+    "L2_indonesia": "Selamat pagi.",
+    "L3_speakers": 1,
+    "L4_medical": {
+      "chief": "",
+      "secondary": [],
+      "structured_secondary": [],
+      "duration": "",
+      "vitals": {},
+      "allergies": {
+        "ada_alergi": false,
+        "alergen": [],
+        "disangkal": false
+      }
+    }
+  },
+  "fields": {
+    "keluhan_utama": "",
+    "keluhan_tambahan": "",
+    "lama_sakit": ""
+  },
+  "ml_classification": "KOSONG",
+  "timestamp": "2026-10-02T14:46:22.659130"
+}

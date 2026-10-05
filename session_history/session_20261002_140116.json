@@ -1,0 +1,176 @@
+{
+  "status": "success",
+  "session_id": "EMR-1790920876",
+  "session_metadata": {
+    "session_id": "EMR-1790920876",
+    "timestamp": "2026-10-02T14:01:16.409474",
+    "audio_file": "",
+    "audio_duration": 0.0,
+    "language": "id"
+  },
+  "audio_file": "rec_1790920875.webm",
+  "audio_url": "/audio/rec_1790920875.webm",
+  "audio_duration": 1.44,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 0.85,
+  "total_time": 0.85,
+  "original_text": "Minum paracetamol, rontgen dada.",
+  "corrected_text": "Minum paracetamol, rontgen dada.",
+  "corrections": [],
+  "segments": [
+    {
+      "start": 0.09,
+      "end": 1.41,
+      "text": "Minum paracetamol, rontgen dada.",
+      "speaker_id": "speaker_2",
+      "speaker_role": "patient",
+      "speaker": "Pasien",
+      "raw_text": "Minum paracetamol, rontgen dada.",
+      "start_time": 0.09,
+      "end_time": 1.41,
+      "confidence": 0.7,
+      "review_required": false,
+      "source": "patient"
+    }
+  ],
+  "chief_complaint": {
+    "value": "Pemeriksaan rontgen dada",
+    "body_part": "Sistemik / Seluruh Tubuh",
+    "onset": null,
+    "duration": null,
+    "severity": null,
+    "source": "patient",
+    "confidence": 0.95,
+    "review_required": false
+  },
+  "symptoms": [
+    {
+      "name": "Pemeriksaan rontgen dada",
+      "status": "present",
+      "source": "patient",
+      "body_part": "Sistemik / Seluruh Tubuh",
+      "frequency": null
+    }
+  ],
+  "duration": null,
+  "vitals": {
+    "blood_pressure": null,
+    "temperature": null,
+    "spo2": null,
+    "pulse": null,
+    "respiratory_rate": null,
+    "weight": null,
+    "height": null,
+    "pain_scale": null
+  },
+  "allergies": {
+    "status": "not_asked",
+    "items": [],
+    "reactions": [],
+    "source": null,
+    "review_required": false,
+    "category": null
+  },
+  "medical_history": [],
+  "medications_mentioned": [
+    "Paracetamol"
+  ],
+  "procedures_mentioned": [
+    "Rontgen Dada"
+  ],
+  "uncategorized": [],
+  "confidence": {
+    "transcription": 0.95,
+    "speaker": 0.7,
+    "clinical_extraction": 0.94,
+    "normalization": 0.98,
+    "level": "RENDAH",
+    "score": 35,
+    "warnings": [
+      "Transcript terlalu pendek — coba rekam lebih lama",
+      "Confidence rendah — coba rekam ulang dengan lebih jelas"
+    ]
+  },
+  "review": {
+    "required": false,
+    "reasons": []
+  },
+  "clinical_validation": {
+    "valid": true,
+    "issues": [],
+    "total_issues": 0
+  },
+  "review_status": "draft",
+  "raw_transcript": "Minum paracetamol, rontgen dada.",
+  "layer1_phonetic": "Minum paracetamol, rontgen dada.",
+  "cleaned_transcript": "Minum paracetamol, rontgen dada.",
+  "labeled_segments": [
+    {
+      "start": 0.09,
+      "end": 1.41,
+      "text": "Minum paracetamol, rontgen dada.",
+      "speaker_id": "speaker_2",
+      "speaker_role": "patient",
+      "speaker": "Pasien",
+      "raw_text": "Minum paracetamol, rontgen dada.",
+      "start_time": 0.09,
+      "end_time": 1.41,
+      "confidence": 0.7,
+      "review_required": false,
+      "source": "patient"
+    }
+  ],
+  "clinical_entities": {
+    "vitals": {},
+    "extended_vitals": {
+      "blood_pressure": null,
+      "temperature": null,
+      "spo2": null,
+      "pulse": null,
+      "respiratory_rate": null,
+      "weight": null,
+      "height": null,
+      "pain_scale": null
+    },
+    "allergies": {
+      "ada_alergi": false,
+      "alergen": [],
+      "disangkal": false
+    },
+    "standardized_allergies": {
+      "status": "not_asked",
+      "items": [],
+      "reactions": [],
+      "source": null,
+      "review_required": false,
+      "category": null
+    },
+    "patient_turns": 1,
+    "doctor_turns": 0
+  },
+  "pipeline_layers": {
+    "L1_phonetic": "Minum paracetamol, rontgen dada.",
+    "L2_indonesia": "Minum paracetamol, rontgen dada.",
+    "L3_speakers": 1,
+    "L4_medical": {
+      "chief": "Pemeriksaan rontgen dada",
+      "secondary": [],
+      "structured_secondary": [],
+      "duration": "",
+      "vitals": {},
+      "allergies": {
+        "ada_alergi": false,
+        "alergen": [],
+        "disangkal": false
+      }
+    }
+  },
+  "fields": {
+    "keluhan_utama": "Pemeriksaan rontgen dada",
+    "keluhan_tambahan": "",
+    "lama_sakit": ""
+  },
+  "ml_classification": "KLINIS",
+  "timestamp": "2026-10-02T14:01:16.410476"
+}

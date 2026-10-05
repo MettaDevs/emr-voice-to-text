@@ -1,0 +1,39 @@
+{
+  "status": "success",
+  "session_id": "VA-1790237629",
+  "audio_file": "sample_1_kepala_pipi.mp3",
+  "audio_url": "/audio/sample_1_kepala_pipi.mp3",
+  "audio_duration": 8.38,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 1.0,
+  "total_time": 1.0,
+  "raw_transcript": "Selamat pagi, Pak. Keluhannya apa? EKG, kepala saya sakit. Terus di atas pipis saya sakiti.",
+  "cleaned_transcript": "Selamat pagi, Pak. Keluhannya apa? EKG, kepala saya sakit. Terus di atas pipis saya sakiti.",
+  "labeled_segments": [
+    {
+      "start": 0.0,
+      "end": 2.84,
+      "text": "Selamat pagi, Pak. Keluhannya apa?",
+      "speaker": "Dokter"
+    },
+    {
+      "start": 2.84,
+      "end": 7.96,
+      "text": "EKG, kepala saya sakit. Terus di atas pipis saya sakiti.",
+      "speaker": "Pasien"
+    }
+  ],
+  "fields": {
+    "keluhan_utama": "Sakit kepala",
+    "keluhan_tambahan": "",
+    "lama_sakit": ""
+  },
+  "confidence": {
+    "level": "SEDANG",
+    "score": 60,
+    "warnings": []
+  },
+  "ml_classification": "KLINIS_KOMPREHENSIF",
+  "timestamp": "2026-09-24T16:13:49.686866"
+}

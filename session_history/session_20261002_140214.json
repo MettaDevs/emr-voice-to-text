@@ -1,0 +1,166 @@
+{
+  "status": "success",
+  "session_id": "EMR-1790920934",
+  "session_metadata": {
+    "session_id": "EMR-1790920934",
+    "timestamp": "2026-10-02T14:02:14.542818",
+    "audio_file": "",
+    "audio_duration": 0.0,
+    "language": "id"
+  },
+  "audio_file": "rec_1790920933.webm",
+  "audio_url": "/audio/rec_1790920933.webm",
+  "audio_duration": 7.74,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 1.06,
+  "total_time": 1.06,
+  "original_text": "Terima kasih telah menonton!",
+  "corrected_text": "Terima kasih telah menonton!",
+  "corrections": [],
+  "segments": [
+    {
+      "start": 1.88,
+      "end": 7.54,
+      "text": "Terima kasih telah menonton!",
+      "speaker_id": "speaker_2",
+      "speaker_role": "patient",
+      "speaker": "Pasien",
+      "raw_text": "Terima kasih telah menonton!",
+      "start_time": 1.88,
+      "end_time": 7.54,
+      "confidence": 0.7,
+      "review_required": false,
+      "source": "patient"
+    }
+  ],
+  "chief_complaint": {
+    "value": null,
+    "body_part": null,
+    "onset": null,
+    "duration": null,
+    "severity": null,
+    "source": null,
+    "confidence": null,
+    "review_required": true
+  },
+  "symptoms": [],
+  "duration": null,
+  "vitals": {
+    "blood_pressure": null,
+    "temperature": null,
+    "spo2": null,
+    "pulse": null,
+    "respiratory_rate": null,
+    "weight": null,
+    "height": null,
+    "pain_scale": null
+  },
+  "allergies": {
+    "status": "not_asked",
+    "items": [],
+    "reactions": [],
+    "source": null,
+    "review_required": false,
+    "category": null
+  },
+  "medical_history": [],
+  "medications_mentioned": [],
+  "procedures_mentioned": [],
+  "uncategorized": [],
+  "confidence": {
+    "transcription": 0.95,
+    "speaker": 0.7,
+    "clinical_extraction": 0.5,
+    "normalization": 0.98,
+    "level": "RENDAH",
+    "score": 0,
+    "warnings": [
+      "Keluhan utama tidak terdeteksi — pastikan pasien menyebutkan gejalanya",
+      "Transcript terlalu pendek — coba rekam lebih lama"
+    ]
+  },
+  "review": {
+    "required": true,
+    "reasons": [
+      "Keluhan utama tidak ditemukan dalam tuturan pasien"
+    ]
+  },
+  "clinical_validation": {
+    "valid": true,
+    "issues": [],
+    "total_issues": 0
+  },
+  "review_status": "needs_review",
+  "raw_transcript": "Terima kasih telah menonton!",
+  "layer1_phonetic": "Terima kasih telah menonton!",
+  "cleaned_transcript": "Terima kasih telah menonton!",
+  "labeled_segments": [
+    {
+      "start": 1.88,
+      "end": 7.54,
+      "text": "Terima kasih telah menonton!",
+      "speaker_id": "speaker_2",
+      "speaker_role": "patient",
+      "speaker": "Pasien",
+      "raw_text": "Terima kasih telah menonton!",
+      "start_time": 1.88,
+      "end_time": 7.54,
+      "confidence": 0.7,
+      "review_required": false,
+      "source": "patient"
+    }
+  ],
+  "clinical_entities": {
+    "vitals": {},
+    "extended_vitals": {
+      "blood_pressure": null,
+      "temperature": null,
+      "spo2": null,
+      "pulse": null,
+      "respiratory_rate": null,
+      "weight": null,
+      "height": null,
+      "pain_scale": null
+    },
+    "allergies": {
+      "ada_alergi": false,
+      "alergen": [],
+      "disangkal": false
+    },
+    "standardized_allergies": {
+      "status": "not_asked",
+      "items": [],
+      "reactions": [],
+      "source": null,
+      "review_required": false,
+      "category": null
+    },
+    "patient_turns": 1,
+    "doctor_turns": 0
+  },
+  "pipeline_layers": {
+    "L1_phonetic": "Terima kasih telah menonton!",
+    "L2_indonesia": "Terima kasih telah menonton!",
+    "L3_speakers": 1,
+    "L4_medical": {
+      "chief": "",
+      "secondary": [],
+      "structured_secondary": [],
+      "duration": "",
+      "vitals": {},
+      "allergies": {
+        "ada_alergi": false,
+        "alergen": [],
+        "disangkal": false
+      }
+    }
+  },
+  "fields": {
+    "keluhan_utama": "",
+    "keluhan_tambahan": "",
+    "lama_sakit": ""
+  },
+  "ml_classification": "KOSONG",
+  "timestamp": "2026-10-02T14:02:14.543829"
+}

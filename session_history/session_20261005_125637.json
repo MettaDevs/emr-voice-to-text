@@ -1,0 +1,257 @@
+{
+  "status": "success",
+  "session_id": "EMR-1791176197",
+  "session_metadata": {
+    "session_id": "EMR-1791176197",
+    "timestamp": "2026-10-05T12:56:37.961701",
+    "audio_file": "",
+    "audio_duration": 0.0,
+    "language": "id"
+  },
+  "audio_file": "rec_1791176195.mp3",
+  "audio_url": "/audio/rec_1791176195.mp3",
+  "audio_duration": 8.38,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 2.35,
+  "total_time": 2.35,
+  "audio_status": "OPTIMAL",
+  "transcription_status": "success",
+  "audio_diagnostics": {
+    "valid": true,
+    "status": "OPTIMAL",
+    "file_size_bytes": 50256,
+    "duration_seconds": 8.375,
+    "source_codec": "mp3float",
+    "source_sample_rate": 24000,
+    "source_channels": 1,
+    "target_sample_rate": 16000,
+    "target_channels": 1,
+    "rms_dbfs": -20.41,
+    "peak_amplitude": 0.6037,
+    "warning": null,
+    "applied_gain_db": 0.0,
+    "samples_count": 134000,
+    "vad_fallback_used": false
+  },
+  "warning": null,
+  "missing_segments": [],
+  "vad_fallback_used": false,
+  "original_text": "Selamat pagi pak, keluhannya apa? Eh, kepala saya sakit. Terus di atas pipi saya sakit.",
+  "corrected_text": "Selamat pagi pak, keluhannya apa?, kepala saya sakit. Terus di atas pipi saya sakit.",
+  "corrections": [
+    {
+      "original": "Eh",
+      "corrected": "",
+      "confidence": 0.88,
+      "review_required": true,
+      "reason": "Koreksi fonetik akustik mic: 'Eh' -> ''"
+    }
+  ],
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 1.98,
+      "text": "Selamat pagi pak, keluhannya apa?",
+      "confidence": 0.95,
+      "speaker_id": "speaker_1",
+      "speaker_role": "doctor",
+      "speaker": "Dokter",
+      "raw_text": "Selamat pagi pak, keluhannya apa?",
+      "start_time": 0.0,
+      "end_time": 1.98,
+      "review_required": false,
+      "source": "doctor"
+    },
+    {
+      "start": 3.19,
+      "end": 5.03,
+      "text": "Kepala saya sakit.",
+      "speaker_id": "speaker_2",
+      "speaker_role": "patient",
+      "speaker": "Pasien",
+      "raw_text": "Eh, kepala saya sakit.",
+      "start_time": 3.19,
+      "end_time": 5.03,
+      "confidence": 0.95,
+      "review_required": false,
+      "source": "patient"
+    },
+    {
+      "start": 5.03,
+      "end": 7.53,
+      "text": "Terus di atas pipi saya sakit.",
+      "speaker_id": "speaker_2",
+      "speaker_role": "patient",
+      "speaker": "Pasien",
+      "raw_text": "Terus di atas pipi saya sakit.",
+      "start_time": 5.03,
+      "end_time": 7.53,
+      "confidence": 0.95,
+      "review_required": false,
+      "source": "patient"
+    }
+  ],
+  "chief_complaint": {
+    "value": "Sakit kepala",
+    "body_part": "Kepala",
+    "onset": null,
+    "duration": null,
+    "severity": null,
+    "source": "patient",
+    "confidence": 0.95,
+    "review_required": false
+  },
+  "symptoms": [
+    {
+      "name": "Sakit kepala",
+      "status": "present",
+      "source": "patient",
+      "body_part": "Kepala",
+      "frequency": null
+    }
+  ],
+  "duration": null,
+  "vitals": {
+    "blood_pressure": null,
+    "temperature": null,
+    "spo2": null,
+    "pulse": null,
+    "respiratory_rate": null,
+    "weight": null,
+    "height": null,
+    "pain_scale": null
+  },
+  "allergies": {
+    "status": "not_asked",
+    "items": [],
+    "reactions": [],
+    "source": null,
+    "review_required": false,
+    "category": null
+  },
+  "medical_history": [],
+  "medications_mentioned": [],
+  "procedures_mentioned": [],
+  "uncategorized": [],
+  "confidence": {
+    "transcription": 0.95,
+    "speaker": 0.95,
+    "clinical_extraction": 0.94,
+    "normalization": 0.88,
+    "level": "SEDANG",
+    "score": 60,
+    "warnings": []
+  },
+  "review": {
+    "required": true,
+    "reasons": [
+      "Terdapat 1 kata yang dikoreksi fonetik dan memerlukan tinjauan"
+    ]
+  },
+  "clinical_validation": {
+    "valid": true,
+    "issues": [],
+    "total_issues": 0
+  },
+  "review_status": "needs_review",
+  "raw_transcript": "Selamat pagi pak, keluhannya apa? Eh, kepala saya sakit. Terus di atas pipi saya sakit.",
+  "layer1_phonetic": "Selamat pagi pak, keluhannya apa? , kepala saya sakit. Terus di atas pipi saya sakit.",
+  "cleaned_transcript": "Selamat pagi pak, keluhannya apa?, kepala saya sakit. Terus di atas pipi saya sakit.",
+  "labeled_segments": [
+    {
+      "start": 0.0,
+      "end": 1.98,
+      "text": "Selamat pagi pak, keluhannya apa?",
+      "confidence": 0.95,
+      "speaker_id": "speaker_1",
+      "speaker_role": "doctor",
+      "speaker": "Dokter",
+      "raw_text": "Selamat pagi pak, keluhannya apa?",
+      "start_time": 0.0,
+      "end_time": 1.98,
+      "review_required": false,
+      "source": "doctor"
+    },
+    {
+      "start": 3.19,
+      "end": 5.03,
+      "text": "Kepala saya sakit.",
+      "speaker_id": "speaker_2",
+      "speaker_role": "patient",
+      "speaker": "Pasien",
+      "raw_text": "Eh, kepala saya sakit.",
+      "start_time": 3.19,
+      "end_time": 5.03,
+      "confidence": 0.95,
+      "review_required": false,
+      "source": "patient"
+    },
+    {
+      "start": 5.03,
+      "end": 7.53,
+      "text": "Terus di atas pipi saya sakit.",
+      "speaker_id": "speaker_2",
+      "speaker_role": "patient",
+      "speaker": "Pasien",
+      "raw_text": "Terus di atas pipi saya sakit.",
+      "start_time": 5.03,
+      "end_time": 7.53,
+      "confidence": 0.95,
+      "review_required": false,
+      "source": "patient"
+    }
+  ],
+  "clinical_entities": {
+    "vitals": {},
+    "extended_vitals": {
+      "blood_pressure": null,
+      "temperature": null,
+      "spo2": null,
+      "pulse": null,
+      "respiratory_rate": null,
+      "weight": null,
+      "height": null,
+      "pain_scale": null
+    },
+    "allergies": {
+      "ada_alergi": false,
+      "alergen": [],
+      "disangkal": false
+    },
+    "standardized_allergies": {
+      "status": "not_asked",
+      "items": [],
+      "reactions": [],
+      "source": null,
+      "review_required": false,
+      "category": null
+    },
+    "patient_turns": 2,
+    "doctor_turns": 1
+  },
+  "pipeline_layers": {
+    "L1_phonetic": "Selamat pagi pak, keluhannya apa? , kepala saya sakit. Terus di atas pipi saya sakit.",
+    "L2_indonesia": "Selamat pagi pak, keluhannya apa?, kepala saya sakit. Terus di atas pipi saya sakit.",
+    "L3_speakers": 3,
+    "L4_medical": {
+      "chief": "Sakit kepala",
+      "secondary": [],
+      "structured_secondary": [],
+      "duration": "",
+      "vitals": {},
+      "allergies": {
+        "ada_alergi": false,
+        "alergen": [],
+        "disangkal": false
+      }
+    }
+  },
+  "fields": {
+    "keluhan_utama": "Sakit kepala",
+    "keluhan_tambahan": "",
+    "lama_sakit": ""
+  },
+  "ml_classification": "KLINIS",
+  "timestamp": "2026-10-05T12:56:37.961701"
+}

@@ -1,0 +1,76 @@
+{
+  "status": "success",
+  "session_id": "VA-1790658106",
+  "audio_file": "sample_1_kepala_pipi.mp3",
+  "audio_url": "/audio/sample_1_kepala_pipi.mp3",
+  "audio_duration": 8.38,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 3.91,
+  "total_time": 3.99,
+  "raw_transcript": "Selamat pagi Pak, keluhannya apa? Eh eh kepala saya sakit. Terus di atas pipis saya sakiti.",
+  "layer1_phonetic": "Selamat pagi Pak, keluhannya apa? Eh eh kepala saya sakit. Terus di atas pipis saya sakiti.",
+  "cleaned_transcript": "Selamat pagi Pak, keluhannya apa? kepala saya sakit. Terus di atas pipis saya sakiti.",
+  "labeled_segments": [
+    {
+      "start": 0.0,
+      "end": 2.79,
+      "text": "Selamat pagi Pak, keluhannya apa?",
+      "raw_text": "Selamat pagi Pak, keluhannya apa?",
+      "speaker": "Dokter"
+    },
+    {
+      "start": 2.79,
+      "end": 4.82,
+      "text": "Kepala saya sakit.",
+      "raw_text": "Eh eh kepala saya sakit.",
+      "speaker": "Pasien"
+    },
+    {
+      "start": 4.82,
+      "end": 7.52,
+      "text": "Terus di atas pipis saya sakiti.",
+      "raw_text": "Terus di atas pipis saya sakiti.",
+      "speaker": "Pasien"
+    }
+  ],
+  "clinical_entities": {
+    "vitals": {},
+    "allergies": {
+      "ada_alergi": false,
+      "alergen": [],
+      "disangkal": false
+    },
+    "patient_turns": 2,
+    "doctor_turns": 1
+  },
+  "pipeline_layers": {
+    "L1_phonetic": "Selamat pagi Pak, keluhannya apa? Eh eh kepala saya sakit. Terus di atas pipis saya sakiti.",
+    "L2_indonesia": "Selamat pagi Pak, keluhannya apa? kepala saya sakit. Terus di atas pipis saya sakiti.",
+    "L3_speakers": 3,
+    "L4_medical": {
+      "chief": "Sakit kepala",
+      "secondary": [],
+      "structured_secondary": [],
+      "duration": "",
+      "vitals": {},
+      "allergies": {
+        "ada_alergi": false,
+        "alergen": [],
+        "disangkal": false
+      }
+    }
+  },
+  "fields": {
+    "keluhan_utama": "Sakit kepala",
+    "keluhan_tambahan": "",
+    "lama_sakit": ""
+  },
+  "confidence": {
+    "level": "SEDANG",
+    "score": 60,
+    "warnings": []
+  },
+  "ml_classification": "KLINIS",
+  "timestamp": "2026-09-29T13:01:46.538681"
+}

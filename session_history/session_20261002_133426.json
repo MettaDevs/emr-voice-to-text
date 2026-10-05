@@ -1,0 +1,80 @@
+{
+  "status": "success",
+  "session_id": "VA-1790919266",
+  "audio_file": "rec_1790919264.webm",
+  "audio_url": "/audio/rec_1790919264.webm",
+  "audio_duration": 23.28,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 1.18,
+  "total_time": 1.19,
+  "raw_transcript": "Malam Dok, malah boleh tahu keluhannya apa ya? Bunyi dok saya pusing dari kemarin sama tadi ada rasa meriang juga. Sebelumnya ibu ada alergia obat untuk alergi obat saya enggak ada sih oke coba kita cek sebentar ya",
+  "layer1_phonetic": "Malam Dok, malah boleh tahu keluhannya apa ya? Bunyi dok saya pusing dari kemarin sama tadi ada rasa meriang juga. Sebelumnya ibu ada alergi obat untuk alergi obat saya enggak ada sih oke coba kita cek sebentar ya",
+  "cleaned_transcript": "Malam Dok, malah boleh tahu keluhannya apa ya? Bunyi dok saya pusing dari kemarin sama tadi ada rasa meriang juga. Sebelumnya ibu ada alergi obat untuk alergi obat saya tidak ada oke coba kita cek sebentar ya",
+  "labeled_segments": [
+    {
+      "start": 0.54,
+      "end": 5.32,
+      "text": "Malam Dok, malah boleh tahu keluhannya apa ya?",
+      "raw_text": "Malam Dok, malah boleh tahu keluhannya apa ya?",
+      "speaker": "Pasien"
+    },
+    {
+      "start": 5.32,
+      "end": 12.29,
+      "text": "Bunyi dok saya pusing dari kemarin sama tadi ada rasa meriang juga.",
+      "raw_text": "Bunyi dok saya pusing dari kemarin sama tadi ada rasa meriang juga.",
+      "speaker": "Pasien"
+    },
+    {
+      "start": 12.29,
+      "end": 22.58,
+      "text": "Sebelumnya ibu ada alergi obat untuk alergi obat saya tidak ada oke coba kita cek sebentar ya",
+      "raw_text": "Sebelumnya ibu ada alergia obat untuk alergi obat saya enggak ada sih oke coba kita cek sebentar ya",
+      "speaker": "Dokter"
+    }
+  ],
+  "clinical_entities": {
+    "vitals": {},
+    "allergies": {
+      "ada_alergi": false,
+      "alergen": [],
+      "disangkal": false
+    },
+    "patient_turns": 2,
+    "doctor_turns": 1
+  },
+  "pipeline_layers": {
+    "L1_phonetic": "Malam Dok, malah boleh tahu keluhannya apa ya? Bunyi dok saya pusing dari kemarin sama tadi ada rasa meriang juga. Sebelumnya ibu ada alergi obat untuk alergi obat saya enggak ada sih oke coba kita cek sebentar ya",
+    "L2_indonesia": "Malam Dok, malah boleh tahu keluhannya apa ya? Bunyi dok saya pusing dari kemarin sama tadi ada rasa meriang juga. Sebelumnya ibu ada alergi obat untuk alergi obat saya tidak ada oke coba kita cek sebentar ya",
+    "L3_speakers": 3,
+    "L4_medical": {
+      "chief": "Pusing",
+      "secondary": [
+        "Meriang"
+      ],
+      "structured_secondary": [
+        "Meriang"
+      ],
+      "duration": "Dari Kemarin",
+      "vitals": {},
+      "allergies": {
+        "ada_alergi": false,
+        "alergen": [],
+        "disangkal": false
+      }
+    }
+  },
+  "fields": {
+    "keluhan_utama": "Pusing",
+    "keluhan_tambahan": "Meriang",
+    "lama_sakit": "Dari Kemarin"
+  },
+  "confidence": {
+    "level": "TINGGI",
+    "score": 95,
+    "warnings": []
+  },
+  "ml_classification": "KLINIS",
+  "timestamp": "2026-10-02T13:34:26.163592"
+}

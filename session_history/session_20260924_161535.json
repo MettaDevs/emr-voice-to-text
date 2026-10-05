@@ -1,0 +1,35 @@
+{
+  "status": "success",
+  "session_id": "VA-1790237735",
+  "audio_file": "rec_1790237733.webm",
+  "audio_url": "/audio/rec_1790237733.webm",
+  "audio_duration": 27.78,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 1.36,
+  "total_time": 1.36,
+  "raw_transcript": "Hai malam, Bang. Malang. Tidak boleh tahu kenapa keluarnya ya Bu? Ini tuh saya tanas sama pikir juga. Ternyata sudah dikatakan tanas ya Bu. Tanasnya sih kemarin-kemarin nggak ada Bu. Sekarang udah mendingan sebenarnya coba gue cari obat aja. Oke Bu, Coba saya cek dulu tanasnya ya Bu",
+  "cleaned_transcript": "Hai malam, Bang. Malang. Tidak boleh tahu kenapa keluarnya ya Bu? Ini saya tanas sama pikir juga. Ternyata sudah dikatakan tanas ya Bu. Tanasnya kemarin-kemarin nggak ada Bu. Sekarang udah mendingan sebenarnya coba gue cari obat aja. Oke Bu, Coba saya cek dulu tanasnya ya Bu",
+  "labeled_segments": [
+    {
+      "start": 0.72,
+      "end": 27.82,
+      "text": "Hai malam, Bang. Malang. Tidak boleh tahu kenapa keluarnya ya Bu? Ini tuh saya tanas sama pikir juga. Ternyata sudah dikatakan tanas ya Bu. Tanasnya sih kemarin-kemarin nggak ada Bu. Sekarang udah mendingan sebenarnya coba gue cari obat aja. Oke Bu, Coba saya cek dulu tanasnya ya Bu",
+      "speaker": "Dokter"
+    }
+  ],
+  "fields": {
+    "keluhan_utama": "",
+    "keluhan_tambahan": "",
+    "lama_sakit": ""
+  },
+  "confidence": {
+    "level": "RENDAH",
+    "score": 10,
+    "warnings": [
+      "Keluhan utama tidak terdeteksi — pastikan pasien menyebutkan gejalanya"
+    ]
+  },
+  "ml_classification": "KLINIS_KOMPREHENSIF",
+  "timestamp": "2026-09-24T16:15:35.101379"
+}

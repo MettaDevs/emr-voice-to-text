@@ -1,0 +1,39 @@
+{
+  "status": "success",
+  "session_id": "VA-1790237797",
+  "audio_file": "sample_3_batuk_sesak.mp3",
+  "audio_url": "/audio/sample_3_batuk_sesak.mp3",
+  "audio_duration": 10.63,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 1.06,
+  "total_time": 1.06,
+  "raw_transcript": "Bisa diceritakan keluhan utamanya apa? Eh, eh ini dong. Batu kering sudah tiga hari terus tenggorokan rasanya gatal dan agak sesat.",
+  "cleaned_transcript": "Bisa diceritakan keluhan utamanya apa? , ini dong. batuk kering sudah tiga hari terus tenggorokan rasanya gatal dan agak sesat.",
+  "labeled_segments": [
+    {
+      "start": 0.0,
+      "end": 2.0,
+      "text": "Bisa diceritakan keluhan utamanya apa?",
+      "speaker": "Dokter"
+    },
+    {
+      "start": 3.35,
+      "end": 9.35,
+      "text": "Eh, eh ini dong. Batu kering sudah tiga hari terus tenggorokan rasanya gatal dan agak sesat.",
+      "speaker": "Pasien"
+    }
+  ],
+  "fields": {
+    "keluhan_utama": "Batuk kering",
+    "keluhan_tambahan": "Tenggorokan gatal",
+    "lama_sakit": ""
+  },
+  "confidence": {
+    "level": "TINGGI",
+    "score": 70,
+    "warnings": []
+  },
+  "ml_classification": "KLINIS_KOMPREHENSIF",
+  "timestamp": "2026-09-24T16:16:37.678391"
+}

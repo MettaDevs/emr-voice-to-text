@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedVoice AI · Voice-to-EMR Clinical Assistant</title>
+    <meta name="description" content="Pengisian otomatis formulir Rekam Medis berbasis suara dokter dan pasien menggunakan Faster-Whisper AI">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --blue: #0284c7;
+            --blue-light: #e0f2fe;
+            --blue-dark: #0369a1;
+            --green: #059669;
+            --green-light: #dcfce7;
+            --amber: #d97706;
+            --amber-light: #fef3c7;
+            --red: #dc2626;
+            --red-light: #fee2e2;
+            --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+            --shadow-md: 0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
+            --radius: 12px;
+            --radius-sm: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* ── Header ── */
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: .85rem;
+        }
+
+        .brand-icon {
+            width: 38px; height: 38px;
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            color: #fff;
+            border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.25rem;
+            box-shadow: 0 2px 4px rgba(2,132,199,.25);
+        }
+
+        .brand-name { font-size: 1.05rem; font-weight: 700; color: var(--text-primary); letter-spacing: -.01em; }
+        .brand-sub { font-size: .74rem; color: var(--text-muted); font-weight: 400; }
+
+        .header-pills { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+
+        .pill {
+            display: inline-flex; align-items: center; gap: .35rem;
+            padding: .25rem .7rem; border-radius: 20px;
+            font-size: .72rem; font-weight: 600;
+            border: 1px solid transparent;
+        }
+        .pill-green { background: var(--green-light); color: var(--green); border-color: #a7f3d0; }
+        .pill-blue  { background: var(--blue-light);  color: var(--blue);  border-color: #bae6fd; }
+        .pill-gray  { background: #f1f5f9; color: var(--text-secondary); border-color: var(--border); }
+
+        /* ── Page Layout ── */
+        .page {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 1.75rem 1.25rem 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* ── Card ── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: box-shadow .2s ease;
+        }
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1rem 1.4rem;
+            border-bottom: 1px solid var(--border);
+            background: #fafbfc;
+        }
+
+        .card-title {
+            display: flex; align-items: center; gap: .6rem;
+            font-size: .88rem; font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .card-body { padding: 1.4rem; }
+
+        /* ── Section numbering ── */
+        .step-num {
+            width: 24px; height: 24px; border-radius: 50%;
+            background: var(--blue); color: #fff;
+            font-size: .75rem; font-weight: 700;
+            display: inline-flex; align-items: center; justify-content: center;
+        }
+
+        /* ── Controls ── */
+        .controls { display: flex; gap: .85rem; align-items: center; flex-wrap: wrap; }
+
+        .btn {
+            display: inline-flex; align-items: center; gap: .5rem;
+            padding: .65rem 1.25rem; border-radius: var(--radius-sm);
+            font-family: inherit; font-size: .85rem; font-weight: 600;
+            cursor: pointer; border: none; transition: all .15s ease;
+        }
+        .btn-primary  { background: var(--blue); color: #fff; }
+        .btn-primary:hover { background: var(--blue-dark); }
+        .btn-primary:disabled { opacity: .6; cursor: not-allowed; }
+        
+        .btn-record {
+            background: #fff;
+            color: var(--red);
+            border: 1.5px solid var(--red);
+            font-size: .95rem;
+            padding: .75rem 1.5rem;
+            border-radius: var(--radius-sm);
+        }
+        .btn-record:hover { background: var(--red-light); }
+        .btn-record.recording {
+            background: var(--red);
+            color: #fff;
+            animation: pulse-red 1.2s infinite;
+            border-color: var(--red);
+        }
+
+        .record-timer {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            background: rgba(0, 0, 0, 0.15);
+            padding: .2rem .5rem;
+            border-radius: 4px;
+            letter-spacing: .05em;
+        }
+
+        .btn-secondary { background: #fff; color: var(--text-secondary); border: 1.5px solid var(--border); }
+        .btn-secondary:hover { border-color: var(--text-secondary); background: #f8fafc; }
+
+        @keyframes pulse-red {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(220,38,38,.45); }
+            50% { box-shadow: 0 0 0 8px rgba(220,38,38,0); }
+        }
+
+        /* ── Notice / Status ── */
+        .hint-text {
+            margin-top: .9rem;
+            font-size: .78rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+        }
+
+        .processing-box {
+            display: none;
+            align-items: center;
+            gap: .75rem;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: var(--radius-sm);
+            padding: .85rem 1.1rem;
+            margin-top: 1rem;
+            color: #1e40af;
+            font-weight: 500;
+            font-size: .85rem;
+        }
+        .processing-box.active { display: flex; }
+
+        /* ── Pipeline 4-Step Status Grid & VU Meter (Sections 2, 7, 10) ── */
+        .pipeline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: .6rem;
+            margin-top: .9rem;
+        }
+        .pipeline-pill {
+            display: flex;
+            align-items: center;
+            gap: .45rem;
+            padding: .45rem .75rem;
+            border-radius: 6px;
+            background: #f8fafc;
+            color: #64748b;
+            font-size: .76rem;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            transition: all .2s ease;
+        }
+        .pipeline-pill.active {
+            background: #ecfdf5;
+            color: #065f46;
+            border-color: #a7f3d0;
+        }
+        .pipeline-pill.warning {
+            background: #fffbeb;
+            color: #92400e;
+            border-color: #fde68a;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #94a3b8;
+            flex-shrink: 0;
+        }
+        .pipeline-pill.active .status-dot {
+            background: #10b981;
+            box-shadow: 0 0 6px #10b981;
+        }
+        .pipeline-pill.warning .status-dot {
+            background: #f59e0b;
+            box-shadow: 0 0 6px #f59e0b;
+        }
+
+        /* ── Transcript panel ── */
+        .transcript-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            min-height: 120px;
+            max-height: 360px;
+            overflow-y: auto;
+            padding: 1rem;
+            font-size: .85rem;
+            line-height: 1.65;
+        }
+
+        .speaker-line {
+            margin-bottom: .75rem;
+            padding-bottom: .6rem;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+        .speaker-line:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .speaker-label {
+            display: inline-block;
+            font-size: .7rem; font-weight: 700;
+            padding: .15rem .5rem;
+            border-radius: 4px;
+            margin-right: .5rem;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+        .lbl-doctor    { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+        .lbl-patient   { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .lbl-companion { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+        .lbl-nurse     { background: #f3e8ff; color: #6b21a8; border: 1px solid #e9d5ff; }
+        .lbl-unknown   { background: #f1f5f9; color: #475569; }
+        .speaker-timestamp { font-size: .7rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-right: .5rem; }
+        .speaker-text { color: var(--text-primary); font-weight: 500; }
+
+        /* ── EMR Form ── */
+        .emr-form-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-top: 4px solid var(--blue);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .emr-header {
+            padding: 1.1rem 1.4rem;
+            background: #fafbfc;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .emr-title { font-size: .95rem; font-weight: 700; color: var(--text-primary); }
+        .emr-subtitle { font-size: .76rem; color: var(--text-muted); margin-top: .15rem; }
+
+        .emr-body {
+            padding: 1.4rem;
+            display: flex; flex-direction: column; gap: 1.25rem;
+        }
+
+        .field-row { display: flex; flex-direction: column; gap: .45rem; }
+
+        .field-label {
+            display: flex; align-items: center; justify-content: space-between;
+            font-size: .76rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .04em;
+            color: var(--text-secondary);
+        }
+
+        .field-required { color: var(--red); margin-left: 2px; }
+
+        .field-textarea {
+            width: 100%;
+            padding: .75rem .9rem;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-family: inherit; font-size: .9rem;
+            color: var(--text-primary);
+            background: #fff;
+            resize: vertical;
+            min-height: 64px;
+            line-height: 1.5;
+            transition: all .15s ease;
+        }
+        .field-textarea:focus {
+            outline: none;
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(2,132,199,.12);
+        }
+
+        .field-input {
+            width: 100%;
+            padding: .65rem .9rem;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-family: inherit; font-size: .9rem;
+            color: var(--text-primary);
+            background: #fff;
+            transition: all .15s ease;
+        }
+        .field-input:focus {
+            outline: none;
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(2,132,199,.12);
+        }
+
+        .field-textarea.updated, .field-input.updated {
+            animation: highlight-update 1.5s ease;
+        }
+        @keyframes highlight-update {
+            0% { background: #eff6ff; border-color: var(--blue); }
+            100% { background: #fff; border-color: var(--border); }
+        }
+
+        /* ── Confidence Badges ── */
+        .confidence-row { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; margin-bottom: .6rem; }
+
+        .conf-badge {
+            display: inline-flex; align-items: center; gap: .35rem;
+            padding: .28rem .75rem; border-radius: 20px;
+            font-size: .75rem; font-weight: 700; border: 1px solid transparent;
+        }
+        .conf-high   { background: var(--green-light); color: var(--green); border-color: #a7f3d0; }
+        .conf-medium { background: var(--amber-light); color: var(--amber); border-color: #fcd34d; }
+        .conf-low    { background: var(--red-light);   color: var(--red);   border-color: #fca5a5; }
+
+        /* ── Warnings ── */
+        .warnings-box {
+            background: var(--amber-light);
+            border: 1px solid #fcd34d;
+            border-radius: var(--radius-sm);
+            padding: .7rem .95rem;
+            font-size: .8rem;
+            color: #92400e;
+        }
+        .warnings-box ul { margin-left: 1.1rem; margin-top: .3rem; }
+        .warnings-box li { margin-bottom: .2rem; }
+
+        /* ── Action buttons ── */
+        .emr-actions {
+            display: flex; gap: .75rem; padding: 0 1.4rem 1.4rem;
+        }
+        .btn-copy {
+            background: var(--blue);
+            color: #fff;
+            padding: .7rem 1.4rem;
+            font-size: .88rem;
+        }
+        .btn-copy:hover { background: var(--blue-dark); }
+        .btn-clear {
+            background: #fff;
+            color: var(--text-secondary);
+            border: 1.5px solid var(--border);
+            padding: .7rem 1.25rem;
+        }
+        .btn-clear:hover { border-color: var(--text-secondary); background: #f8fafc; }
+
+        /* ── Latency badge ── */
+        .latency-badge {
+            display: inline-flex; align-items: center; gap: .3rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .74rem; font-weight: 600;
+            color: var(--green);
+            background: var(--green-light);
+            border: 1px solid #a7f3d0;
+            padding: .25rem .65rem;
+            border-radius: 20px;
+        }
+
+        /* ── Spinner ── */
+        .spinner {
+            width: 16px; height: 16px;
+            border: 2px solid rgba(2, 132, 199, 0.25);
+            border-radius: 50%;
+            border-top-color: var(--blue);
+            animation: spin .7s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Status badge ── */
+        .status-filled { display: none; }
+        .status-filled.visible {
+            display: inline-flex; align-items: center; gap: .3rem;
+            background: var(--green-light); color: var(--green);
+            border: 1px solid #a7f3d0;
+            padding: .25rem .75rem; border-radius: 20px;
+            font-size: .74rem; font-weight: 600;
+        }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+    </style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header class="header">
+    <div class="header-brand">
+        <div class="brand-icon">🩺</div>
+        <div>
+            <div class="brand-name">MedVoice EMR</div>
+            <div class="brand-sub">Clinical Speech-to-Text &amp; Intake Extraction · Rumah Sakit Indonesia</div>
+        </div>
+    </div>
+    <div class="header-pills">
+        <span class="pill pill-green">⚡ RTX 3050 CUDA</span>
+        <span class="pill pill-blue">Large-v3-Turbo</span>
+        <span class="pill pill-gray" id="latencyGlobal">Status: Siap</span>
+    </div>
+</header>
+
+<!-- ── Page Content ── -->
+<div class="page">
+
+    <!-- 1. Input Suara Percakapan -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title"><span class="step-num">1</span> Rekam Percakapan Konsultasi Dokter – Pasien</div>
+            <span class="pill pill-gray">Durasi Panjang · Noise &amp; Hembusan Nafas Filtered</span>
+        </div>
+        <div class="card-body">
+            <!-- Pilihan Mikrofon & Status Device (Section 2) -->
+            <div style="display:flex;gap:1rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap;">
+                <div style="display:flex;align-items:center;gap:.5rem;flex:1;min-width:260px;">
+                    <label for="micSelect" style="font-size:.8rem;font-weight:700;color:var(--text-secondary);white-space:nowrap;">🎙️ Sumber Mikrofon:</label>
+                    <select id="micSelect" class="field-input" style="padding:.4rem .6rem;font-size:.82rem;" onchange="onMicrophoneDeviceChanged()">
+                        <option value="">Default Mikrofon Sistem</option>
+                    </select>
+                </div>
+                <div id="micStatusBadge" class="pill pill-blue" style="font-size:.78rem;font-weight:600;">
+                    ⚪ Memeriksa Mikrofon...
+                </div>
+            </div>
+
+            <!-- Live VU Meter & Volume Quality Warning (Section 2, 8, 10) -->
+            <div id="audioVisualizerBox" style="display:none;margin-bottom:1rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:.85rem;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem;font-size:.78rem;">
+                    <span style="font-weight:700;color:var(--text-secondary);">📊 Indikator Level Suara Masuk (VU Meter)</span>
+                    <div style="display:flex;gap:.5rem;align-items:center;">
+                        <span id="audioClarityBadge" class="pill pill-green" style="font-size:.72rem;padding:.15rem .5rem;">🟢 Siap Rekam</span>
+                        <span id="audioLevelText" style="font-family:'JetBrains Mono',monospace;color:var(--text-muted);">-inf dBFS</span>
+                    </div>
+                </div>
+                <div style="background:#e2e8f0;border-radius:6px;height:12px;overflow:hidden;position:relative;">
+                    <div id="audioLevelBar" style="width:0%;height:100%;background:linear-gradient(90deg, #10b981 60%, #f59e0b 85%, #ef4444 100%);transition:width 0.05s ease;"></div>
+                </div>
+                <div id="audioLevelWarning" style="margin-top:.45rem;font-size:.78rem;color:#b91c1c;font-weight:600;display:none;"></div>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-record" id="btnRecord" onclick="toggleRecording()">
+                    <span id="recordIcon">🎤</span>
+                    <span id="recordText">Mulai Rekam Percakapan</span>
+                    <span id="recordTimer" class="record-timer" style="display:none;">00:00</span>
+                </button>
+                <label class="btn btn-secondary" style="cursor:pointer;" id="uploadLabel">
+                    📁 Upload File Audio
+                    <input type="file" id="fileInput" accept="audio/*" style="display:none" onchange="handleFileUpload(event)">
+                </label>
+            </div>
+
+            <!-- 4 Indikator Status Pipeline Terpisah (Section 10) -->
+            <div class="pipeline-grid" id="pipelineStatusGrid">
+                <div class="pipeline-pill" id="pipeAudioDetected">
+                    <span class="status-dot"></span> 🎙️ 1. Audio Terdeteksi
+                </div>
+                <div class="pipeline-pill" id="pipeAudioTransmitted">
+                    <span class="status-dot"></span> 📤 2. Audio Terkirim
+                </div>
+                <div class="pipeline-pill" id="pipeSTTProcessing">
+                    <span class="status-dot"></span> ⚡ 3. STT Diproses
+                </div>
+                <div class="pipeline-pill" id="pipeTextGenerated">
+                    <span class="status-dot"></span> 📝 4. Teks Dihasilkan
+                </div>
+            </div>
+
+            <!-- Processing state banner -->
+            <div class="processing-box" id="processingBox">
+                <span class="spinner"></span>
+                <span id="processingText">Sedang menganalisis rekaman konsultasi dokter-pasien dengan Faster-Whisper Large-v3-Turbo...</span>
+            </div>
+
+            <!-- Live Partial Transcript Preview (Section 7) -->
+            <div id="partialTranscriptBox" style="display:none;margin-top:.85rem;padding:.75rem;background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;font-size:.82rem;color:#1e40af;">
+                <strong>⚡ Ucapan Sedang Terdeteksi (Live Streaming):</strong>
+                <span id="partialTranscriptText" style="font-style:italic;margin-left:.3rem;">Mendengarkan...</span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 2. Transcript Berlabel Pembicara -->
+    <div class="card" id="transcriptCard" style="display:none;">
+        <div class="card-header">
+            <div class="card-title"><span class="step-num">2</span> Transkrip Percakapan Medis</div>
+            <div style="display:flex;gap:.5rem;align-items:center;">
+                <span class="pill pill-gray lbl-doctor" style="border-radius:4px;">Dokter</span>
+                <span class="pill pill-gray lbl-patient" style="border-radius:4px;">Pasien</span>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="transcript-box" id="transcriptBox">
+                <!-- Injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Formulir Rekam Medis (EMR) -->
+    <div class="emr-form-card" id="emrCard">
+        <div class="emr-header">
+            <div>
+                <div class="emr-title">📋 Formulir Rekam Medis Pasien (EMR)</div>
+                <div class="emr-subtitle">Terisi otomatis oleh AI · Dapat diedit langsung sebelum disimpan ke sistem RS</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;">
+                <span class="pill pill-green" id="reviewBadgeApproved" style="display:none;">✅ Disetujui Dokter</span>
+                <span class="pill pill-amber" id="reviewBadgeNeedsReview" style="display:none;">⚠️ Perlu Verifikasi Dokter</span>
+                <span class="pill pill-blue" id="reviewBadgeDraft" style="display:none;">📝 Draft EMR</span>
+                <span class="status-filled" id="statusBadge">✓ Terisi Otomatis</span>
+                <span class="latency-badge" id="latencyBadge" style="display:none;"></span>
+            </div>
+        </div>
+
+        <div class="emr-body">
+            <!-- Confidence + Warnings + Traceable Corrections -->
+            <div id="confidenceArea" style="display:none;">
+                <div class="confidence-row" id="confidenceRow"></div>
+                <div class="warnings-box" id="warningsBox" style="display:none;"></div>
+                <div id="correctionsBox" style="display:none;margin-top:.75rem;padding:.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:.8rem;"></div>
+            </div>
+
+            <!-- Keluhan Utama -->
+            <div class="field-row">
+                <label class="field-label" for="keluhanUtama">
+                    <span>KELUHAN UTAMA <span class="field-required">*</span></span>
+                    <span style="font-weight:400;color:var(--text-muted);text-transform:none;">Chief Complaint</span>
+                </label>
+                <textarea id="keluhanUtama" class="field-textarea" rows="2"
+                          placeholder="Keluhan utama pasien akan terisi otomatis di sini..."></textarea>
+            </div>
+
+            <!-- Keluhan Tambahan -->
+            <div class="field-row">
+                <label class="field-label" for="keluhanTambahan">
+                    <span>KELUHAN TAMBAHAN / ANAMNESA <span class="field-required">*</span></span>
+                    <span style="font-weight:400;color:var(--text-muted);text-transform:none;">Secondary Symptoms &amp; Clinical Notes</span>
+                </label>
+                <textarea id="keluhanTambahan" class="field-textarea" rows="3"
+                          placeholder="Gejala penyerta, tanda vital, dan anamnesis dokter-pasien..."></textarea>
+            </div>
+
+            <!-- Lama Sakit -->
+            <div class="field-row" style="max-width:440px;">
+                <label class="field-label" for="lamaSakit">
+                    <span>LAMA SAKIT / DURASI</span>
+                    <span style="font-weight:400;color:var(--text-muted);text-transform:none;">Onset &amp; Duration</span>
+                </label>
+                <input type="text" id="lamaSakit" class="field-input"
+                       placeholder="Contoh: Dari kemarin malam · Sudah 3 hari">
+            </div>
+        </div>
+
+        <div class="emr-actions">
+            <button class="btn btn-copy" id="btnCopy" onclick="copyFormToClipboard()" title="Salin seluruh isi formulir ke clipboard">
+                📋 Salin Formulir
+            </button>
+            <button class="btn" id="btnSaveUpdate" onclick="saveStaffCorrections()" style="background:#4f46e5;color:#fff;display:none;" title="Simpan Perubahan & Catat Riwayat Koreksi">
+                ✏️ Simpan Koreksi
+            </button>
+            <button class="btn" id="btnApproveDraft" onclick="approveCurrentDraft()" style="background:#059669;color:#fff;display:none;" title="Verifikasi & Setujui Draft EMR">
+                ✅ Setujui (Dokter)
+            </button>
+            <button class="btn" id="btnRejectDraft" onclick="rejectCurrentDraft()" style="background:#dc2626;color:#fff;display:none;" title="Tolak Draft EMR">
+                ❌ Tolak Draft
+            </button>
+            <button class="btn" id="btnFlagDraft" onclick="flagInappropriateDraft()" style="background:#d97706;color:#fff;display:none;" title="Tandai Informasi Tidak Sesuai">
+                🚩 Tandai Tidak Sesuai
+            </button>
+            <button class="btn" id="btnExportFHIR" onclick="exportCurrentDraft()" style="background:#0284c7;color:#fff;display:none;" title="Kirim ke Sistem EMR Rumah Sakit (HL7 FHIR)">
+                📤 Kirim ke EMR (FHIR)
+            </button>
+            <button class="btn btn-clear" onclick="clearForm()" title="Bersihkan semua field">
+                🗑️ Bersihkan
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<!-- ── JavaScript Logic ── -->
+<script>
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let isRecording = false;
+    let timerInterval = null;
+    let recordingSeconds = 0;
+
+    // Web Audio API State & VU Meter
+    let audioCtx = null;
+    let analyser = null;
+    let micSource = null;
+    let vuAnimId = null;
+    let currentSessionId = null;
+    let currentSequenceId = 0;
+    let silentFramesCount = 0;
+    let selectedDeviceId = "";
+
+    // ── State Machine Status Mikrofon (Section 2) ───────────────────
+    function setMicState(state, customMessage) {
+        const badge = document.getElementById('micStatusBadge');
+        if (!badge) return;
+
+        const stateMap = {
+            'microphone_idle':        { cls: 'pill-gray',  text: '⚪ Mikrofon Idle' },
+            'requesting_permission':  { cls: 'pill-amber', text: '🟡 Meminta Izin Mikrofon...' },
+            'microphone_ready':       { cls: 'pill-green', text: '🟢 Mikrofon Siap' },
+            'recording':              { cls: 'pill-red',   text: '🔴 Merekam Percakapan...' },
+            'processing':             { cls: 'pill-blue',  text: '🟣 Mengirim Audio Chunks...' },
+            'transcribing':           { cls: 'pill-blue',  text: '⚡ Whisper GPU Transkripsi...' },
+            'completed':              { cls: 'pill-green', text: '✅ Transkripsi Selesai' },
+            'error':                  { cls: 'pill-red',   text: '❌ Terjadi Gangguan Mic' }
+        };
+
+        const target = stateMap[state] || { cls: 'pill-gray', text: state };
+        badge.className = `pill ${target.cls}`;
+        badge.textContent = customMessage || target.text;
+    }
+
+    // ── Inisialisasi Perangkat Mikrofon (Section 2) ────────────────
+    async function initMicrophoneDevices() {
+        const select = document.getElementById('micSelect');
+        if (!select || !navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+            setMicState('microphone_idle', 'Mikrofon Sistem');
+            return;
+        }
+
+        try {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const audioInputs = devices.filter(d => d.kind === 'audioinput');
+
+            select.innerHTML = '<option value="">Default Mikrofon Sistem</option>';
+            audioInputs.forEach((dev, idx) => {
+                const opt = document.createElement('option');
+                opt.value = dev.deviceId;
+                opt.textContent = dev.label || `Mikrofon ${idx + 1}`;
+                select.appendChild(opt);
+            });
+
+            if (audioInputs.length > 0) {
+                setMicState('microphone_ready', `🟢 ${audioInputs.length} Mikrofon Terdeteksi`);
+            } else {
+                setMicState('microphone_idle', '⚪ Mikrofon Default');
+            }
+        } catch (e) {
+            setMicState('error', 'Gagal memindai mikrofon');
+        }
+    }
+
+    function onMicrophoneDeviceChanged() {
+        const select = document.getElementById('micSelect');
+        selectedDeviceId = select ? select.value : "";
+        console.log("Perangkat mikrofon dipilih:", selectedDeviceId || "default");
+    }
+
+    // Pasang listener device change
+    if (navigator.mediaDevices && navigator.mediaDevices.ondevicechange !== undefined) {
+        navigator.mediaDevices.ondevicechange = initMicrophoneDevices;
+    }
+    document.addEventListener('DOMContentLoaded', initMicrophoneDevices);
+
+    // ── Setup Live VU Meter & Audio Quality Analyser (Section 2, 8, 10) ──
+    function setupAudioVisualizer(stream) {
+        const visualizerBox = document.getElementById('audioVisualizerBox');
+        const levelBar = document.getElementById('audioLevelBar');
+        const levelText = document.getElementById('audioLevelText');
+        const levelWarning = document.getElementById('audioLevelWarning');
+        const p1 = document.getElementById('pipeAudioDetected');
+
+        visualizerBox.style.display = 'block';
+        silentFramesCount = 0;
+
+        try {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioCtx.createAnalyser();
+            analyser.fftSize = 512;
+            analyser.smoothingTimeConstant = 0.4;
+
+            micSource = audioCtx.createMediaStreamSource(stream);
+            micSource.connect(analyser);
+
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+
+            function updateVU() {
+                if (!isRecording) return;
+                analyser.getByteFrequencyData(dataArray);
+
+                let sum = 0;
+                let peak = 0;
+                for (let i = 0; i < bufferLength; i++) {
+                    const val = dataArray[i];
+                    sum += val * val;
+                    if (val > peak) peak = val;
+                }
+                const rms = Math.sqrt(sum / bufferLength);
+                const percent = Math.min(100, Math.round((rms / 128) * 100));
+
+                levelBar.style.width = percent + '%';
+
+                // Hitung estimasi dBFS
+                const dbfs = percent > 0 ? Math.round(20 * Math.log10(percent / 100)) : -99;
+                levelText.textContent = `${dbfs} dBFS`;
+
+                const clarityBadge = document.getElementById('audioClarityBadge');
+                if (dbfs >= -26) {
+                    if (clarityBadge) {
+                        clarityBadge.className = 'pill pill-green';
+                        clarityBadge.textContent = '🟢 Level Optimal (Sangat Jelas)';
+                    }
+                    p1.classList.add('active');
+                    silentFramesCount = 0;
+                    levelWarning.style.display = 'none';
+                } else if (dbfs >= -42) {
+                    if (clarityBadge) {
+                        clarityBadge.className = 'pill pill-amber';
+                        clarityBadge.textContent = '🟡 Agak Pelan (Bisa Lebih Dekat)';
+                    }
+                    p1.classList.add('active');
+                    silentFramesCount = 0;
+                    levelWarning.style.display = 'none';
+                } else {
+                    silentFramesCount++;
+                    if (clarityBadge) {
+                        clarityBadge.className = 'pill pill-red';
+                        clarityBadge.textContent = '🔴 Terlalu Pelan / Hening';
+                    }
+                    // Jika hening lebih dari 3 detik (sekitar 90 frame)
+                    if (silentFramesCount > 90) {
+                        levelWarning.style.display = 'block';
+                        levelWarning.textContent = '⚠️ Suara sangat pelan atau mikrofon ter-mute. Dekatkan mikrofon ke arah dokter/pasien.';
+                        p1.classList.remove('active');
+                        p1.classList.add('warning');
+                    }
+                }
+
+                vuAnimId = requestAnimationFrame(updateVU);
+            }
+            updateVU();
+        } catch (e) {
+            console.warn("Tidak dapat mengaktifkan Web Audio Visualizer:", e);
+        }
+    }
+
+    function stopAudioVisualizer() {
+        if (vuAnimId) cancelAnimationFrame(vuAnimId);
+        if (micSource) try { micSource.disconnect(); } catch(e) {}
+        if (audioCtx && audioCtx.state !== 'closed') try { audioCtx.close(); } catch(e) {}
+        document.getElementById('audioVisualizerBox').style.display = 'none';
+        document.getElementById('audioLevelWarning').style.display = 'none';
+    }
+
+    // ── File Upload ───────────────────────────────────────────────
+    async function handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const label = document.getElementById('uploadLabel');
+        const pBox = document.getElementById('processingBox');
+        const pText = document.getElementById('processingText');
+
+        if (label) label.style.opacity = '.5';
+        pBox.classList.add('active');
+        pText.textContent = `Memproses audio '${file.name}' dengan Faster-Whisper GPU...`;
+        setMicState('transcribing');
+
+        try {
+            const fd = new FormData();
+            fd.append('file', file);
+            const res = await fetch('/api/process-upload', { method: 'POST', body: fd });
+            const data = await res.json();
+            renderResult(data);
+            setMicState('completed');
+        } catch (e) {
+            alert('Gagal memproses file audio: ' + e);
+            setMicState('error');
+        } finally {
+            if (label) label.style.opacity = '1';
+            pBox.classList.remove('active');
+            event.target.value = '';
+        }
+    }
+
+    // ── Recording Control (Long Duration, Chunking & Streaming) ────
+    async function toggleRecording() {
+        const btn = document.getElementById('btnRecord');
+        const rIcon = document.getElementById('recordIcon');
+        const rText = document.getElementById('recordText');
+        const timerEl = document.getElementById('recordTimer');
+        const pBox = document.getElementById('processingBox');
+        const pText = document.getElementById('processingText');
+        const p2 = document.getElementById('pipeAudioTransmitted');
+        const p3 = document.getElementById('pipeSTTProcessing');
+        const p4 = document.getElementById('pipeTextGenerated');
+
+        if (!isRecording) {
+            try {
+                setMicState('requesting_permission');
+
+                const audioConstraints = {
+                    channelCount: 1,
+                    sampleRate: { ideal: 48000 },
+                    echoCancellation: true,
+                    noiseSuppression: false, // Nonaktifkan WebRTC aggressive suppression agar konsonan awal/akhir tidak terpotong
+                    autoGainControl: true
+                };
+                if (selectedDeviceId) {
+                    audioConstraints.deviceId = { exact: selectedDeviceId };
+                }
+
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: audioConstraints });
+
+                setupAudioVisualizer(stream);
+
+                const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+                    ? 'audio/webm;codecs=opus'
+                    : 'audio/webm';
+
+                mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: mimeType,
+                    audioBitsPerSecond: 128000 // 128 kbps Opus untuk transmisi suara bening & detail sibilan jernih
+                });
+
+                audioChunks = [];
+                currentSessionId = `SESS-${Date.now()}`;
+                currentSequenceId = 0;
+
+                // Inisialisasi sesi di backend (Section 3)
+                fetch('/api/audio/session/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: currentSessionId,
+                        mime_type: mimeType,
+                        device_id: selectedDeviceId
+                    })
+                }).catch(e => console.warn("Session init warning:", e));
+
+                // Mengumpulkan & mengirimkan audio chunk setiap 2000ms (Section 3)
+                mediaRecorder.ondataavailable = async e => {
+                    if (e.data && e.data.size > 0) {
+                        audioChunks.push(e.data);
+                        const seq = currentSequenceId++;
+                        const chunkBlob = e.data;
+
+                        const fd = new FormData();
+                        fd.append('session_id', currentSessionId);
+                        fd.append('sequence_id', seq);
+                        fd.append('start_time', (seq * 2.0));
+                        fd.append('end_time', ((seq + 1) * 2.0));
+                        fd.append('file', chunkBlob, `chunk_${seq}.webm`);
+
+                        try {
+                            const res = await fetch('/api/audio/chunk', { method: 'POST', body: fd });
+                            if (res.ok) {
+                                p2.classList.add('active');
+                            }
+                        } catch(err) {
+                            console.warn("Chunk send retry warning:", err);
+                        }
+                    }
+                };
+
+                mediaRecorder.onstop = async () => {
+                    stream.getTracks().forEach(track => track.stop());
+                    stopAudioVisualizer();
+
+                    const recordedMins = String(Math.floor(recordingSeconds / 60)).padStart(2, '0');
+                    const recordedSecs = String(recordingSeconds % 60).padStart(2, '0');
+
+                    pBox.classList.add('active');
+                    pText.textContent = `Menyelesaikan & menganalisis rekaman (${recordedMins}:${recordedSecs}) dengan Faster-Whisper GPU...`;
+                    setMicState('transcribing');
+                    p3.classList.add('active');
+
+                    // Selesaikan sesi chunking secara terpadu
+                    try {
+                        const fd = new FormData();
+                        fd.append('session_id', currentSessionId);
+                        let res = await fetch('/api/audio/session/complete', { method: 'POST', body: fd });
+                        
+                        // Fallback ke upload blob penuh jika perakitan chunk bermasalah
+                        if (!res.ok) {
+                            console.warn("Session complete fallback to full blob upload...");
+                            const blob = new Blob(audioChunks, { type: 'audio/webm' });
+                            const file = new File([blob], 'konsultasi_medis.webm', { type: 'audio/webm' });
+                            const fullFd = new FormData();
+                            fullFd.append('file', file);
+                            res = await fetch('/api/process-upload', { method: 'POST', body: fullFd });
+                        }
+
+                        const data = await res.json();
+                        renderResult(data);
+                        setMicState('completed');
+                        p4.classList.add('active');
+                    } catch (e) {
+                        alert('Gagal memproses rekaman: ' + e);
+                        setMicState('error');
+                    } finally {
+                        pBox.classList.remove('active');
+                    }
+                };
+
+                // Timeslice 2000ms untuk chunk streaming teratur
+                mediaRecorder.start(2000);
+                isRecording = true;
+                setMicState('recording');
+
+                btn.classList.add('recording');
+                rIcon.textContent = '⏹️';
+                rText.textContent = 'Selesai & Proses Rekaman';
+                timerEl.style.display = 'inline-block';
+                timerEl.textContent = '00:00';
+                recordingSeconds = 0;
+
+                // Reset pipeline status grid
+                [p2, p3, p4].forEach(p => p.classList.remove('active', 'warning'));
+
+                clearInterval(timerInterval);
+                timerInterval = setInterval(() => {
+                    recordingSeconds++;
+                    const m = String(Math.floor(recordingSeconds / 60)).padStart(2, '0');
+                    const s = String(recordingSeconds % 60).padStart(2, '0');
+                    timerEl.textContent = `${m}:${s}`;
+                }, 1000);
+
+            } catch (e) {
+                alert('Tidak dapat mengakses mikrofon: ' + e);
+                setMicState('error', 'Izin mic ditolak');
+                stopAudioVisualizer();
+            }
+        } else {
+            // Berhenti merekam
+            clearInterval(timerInterval);
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+            }
+            isRecording = false;
+
+            btn.classList.remove('recording');
+            rIcon.textContent = '🎤';
+            rText.textContent = 'Mulai Rekam Percakapan';
+            timerEl.style.display = 'none';
+        }
+    }
+
+    let currentSessionData = null;
+
+    // ── Render Result ─────────────────────────────────────────────
+    function renderResult(data) {
+        currentSessionData = data;
+        const fields = data.fields || {};
+
+        // ── 1. Indikator Pipeline 4 Tahap Terpisah (Section 10) ──
+        const p1 = document.getElementById('pipeAudioDetected');
+        const p2 = document.getElementById('pipeAudioTransmitted');
+        const p3 = document.getElementById('pipeSTTProcessing');
+        const p4 = document.getElementById('pipeTextGenerated');
+
+        const diag = data.audio_diagnostics || {};
+        if (data.audio_status !== 'SILENT' && data.audio_status !== 'EMPTY') {
+            p1.className = 'pipeline-pill active';
+        } else {
+            p1.className = 'pipeline-pill warning';
+        }
+        p2.className = 'pipeline-pill active';
+        p3.className = 'pipeline-pill active';
+
+        if (data.original_text || (fields.keluhan_utama)) {
+            p4.className = 'pipeline-pill active';
+        } else {
+            p4.className = 'pipeline-pill warning';
+        }
+
+        // EMR Fields
+        const fUtama    = document.getElementById('keluhanUtama');
+        const fTambahan = document.getElementById('keluhanTambahan');
+        const fLama     = document.getElementById('lamaSakit');
+
+        fUtama.value    = fields.keluhan_utama    || '';
+        fTambahan.value = fields.keluhan_tambahan || '';
+        fLama.value     = fields.lama_sakit       || '';
+
+        [fUtama, fTambahan, fLama].forEach(el => {
+            el.classList.add('updated');
+            setTimeout(() => el.classList.remove('updated'), 1800);
+        });
+
+        // Status badge
+        const badge = document.getElementById('statusBadge');
+        if (fields.keluhan_utama) {
+            badge.classList.add('visible');
+        } else {
+            badge.classList.remove('visible');
+        }
+
+        // Review badges & buttons
+        const bApp = document.getElementById('reviewBadgeApproved');
+        const bRev = document.getElementById('reviewBadgeNeedsReview');
+        const bDft = document.getElementById('reviewBadgeDraft');
+        const btnApp = document.getElementById('btnApproveDraft');
+        const btnExp = document.getElementById('btnExportFHIR');
+        const btnSave = document.getElementById('btnSaveUpdate');
+        const btnRej = document.getElementById('btnRejectDraft');
+        const btnFlag = document.getElementById('btnFlagDraft');
+
+        [bApp, bRev, bDft].forEach(b => b.style.display = 'none');
+        btnApp.style.display = 'inline-flex';
+        btnSave.style.display = 'inline-flex';
+        btnRej.style.display = 'inline-flex';
+        btnFlag.style.display = 'inline-flex';
+        btnExp.style.display = 'none';
+
+        if (data.review_status === 'approved') {
+            bApp.style.display = 'inline-flex';
+            btnApp.style.display = 'none';
+            btnExp.style.display = 'inline-flex';
+        } else if (data.review_status === 'needs_review' || (data.review && data.review.required)) {
+            bRev.style.display = 'inline-flex';
+        } else {
+            bDft.style.display = 'inline-flex';
+        }
+
+        // Latency info
+        const lb = document.getElementById('latencyBadge');
+        lb.style.display = 'inline-flex';
+        lb.textContent = `⚡ ${data.total_time}s`;
+        document.getElementById('latencyGlobal').textContent = `Latency: ${data.total_time}s (${data.audio_duration}s audio | RMS: ${diag.rms_dbfs !== undefined ? diag.rms_dbfs + ' dBFS' : '-'})`;
+
+        // Confidence & Review assessment
+        renderConfidence(data.confidence, data.review);
+
+        // Diagnostik Akustik & Deteksi Ucapan Hilang (Sections 8, 9, 10)
+        const warnBox = document.getElementById('warningsBox');
+        if (warnBox) {
+            let acousticWarns = [];
+            if (data.audio_status === 'SILENT') {
+                acousticWarns.push('🔇 <strong>Audio Hening / Mic Ter-mute:</strong> Tidak ada sinyal suara manusia yang cukup (RMS < -50 dBFS). Periksa koneksi mikrofon.');
+            } else if (data.audio_status === 'VERY_LOW_VOLUME' || data.audio_status === 'LOW_VOLUME') {
+                acousticWarns.push(`📢 <strong>Adaptive Gain Boost Aktif:</strong> Volume suara pasien sangat rendah (${diag.rms_dbfs} dBFS). Penguatan otomatis diterapkan (+${diag.applied_gain_db || 0} dB) agar ucapan tertangkap.`);
+            } else if (data.audio_status === 'CLIPPING') {
+                acousticWarns.push(`⚠️ <strong>Audio Clipping:</strong> Terjadi distorsi puncak suara (${diag.peak_amplitude}). Harap beri jarak mikrofon dari mulut pembicara.`);
+            }
+            if (data.vad_fallback_used) {
+                acousticWarns.push('⚡ <strong>Dual-Pass VAD Fallback:</strong> Ucapan sempat tersaring oleh VAD dan berhasil dipulihkan pada pass kedua tanpa filter.');
+            }
+            if (data.warning && !acousticWarns.some(w => w.includes(data.warning))) {
+                acousticWarns.push(`ℹ️ ${data.warning}`);
+            }
+
+            if (acousticWarns.length > 0) {
+                warnBox.style.display = 'block';
+                warnBox.innerHTML += '<div style="margin-top:.4rem;border-top:1px dashed #fcd34d;padding-top:.4rem;">' + acousticWarns.join('<br>') + '</div>';
+            }
+        }
+
+        // Traceable phonetic corrections
+        renderCorrections(data.corrections);
+
+        // Transcript dengan giliran bicara Dokter vs Pasien
+        renderTranscript(data.segments || data.labeled_segments, data.original_text || data.raw_transcript, data.corrected_text || data.cleaned_transcript);
+    }
+
+    async function saveStaffCorrections() {
+        if (!currentSessionData || !currentSessionData.session_id) {
+            alert('Tidak ada sesi rekam medis aktif yang dapat diperbarui.');
+            return;
+        }
+        const u = document.getElementById('keluhanUtama').value.trim();
+        const t = document.getElementById('keluhanTambahan').value.trim();
+        const l = document.getElementById('lamaSakit').value.trim();
+
+        const reason = prompt('Masukkan alasan koreksi data klinis (opsional):', 'Koreksi transkripsi & konfirmasi pasien');
+        if (reason === null) return;
+
+        try {
+            const res = await fetch('/api/emr/review', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    session_id: currentSessionData.session_id,
+                    action: 'update',
+                    actor: 'dr_spesialis',
+                    notes: reason,
+                    updated_fields: {
+                        keluhan_utama: u,
+                        keluhan_tambahan: t,
+                        lama_sakit: l
+                    }
+                })
+            });
+            const d = await res.json();
+            if (d.status === 'success') {
+                alert('✓ Koreksi tenaga medis berhasil disimpan & dicatat ke riwayat audit trail EMR!');
+            } else {
+                alert('Gagal menyimpan: ' + (d.message || d.error));
+            }
+        } catch(e) {
+            alert('Gagal menyimpan koreksi: ' + e);
+        }
+    }
+
+    async function rejectCurrentDraft() {
+        if (!currentSessionData || !currentSessionData.session_id) return;
+        const reason = prompt('Masukkan alasan penolakan draft EMR:', 'Informasi tidak lengkap atau transkripsi tidak akurat');
+        if (!reason) return;
+
+        try {
+            const res = await fetch('/api/emr/review', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    session_id: currentSessionData.session_id,
+                    action: 'reject',
+                    actor: 'dr_spesialis',
+                    notes: reason
+                })
+            });
+            const d = await res.json();
+            if (d.status === 'success') {
+                currentSessionData.review_status = 'rejected';
+                document.getElementById('reviewBadgeNeedsReview').style.display = 'none';
+                document.getElementById('reviewBadgeApproved').style.display = 'none';
+                document.getElementById('reviewBadgeDraft').style.display = 'inline-flex';
+                document.getElementById('reviewBadgeDraft').textContent = '❌ Ditolak';
+                document.getElementById('reviewBadgeDraft').style.background = '#fef2f2';
+                document.getElementById('reviewBadgeDraft').style.color = '#dc2626';
+                alert('Draft EMR ditolak dan dicatat pada audit trail.');
+            }
+        } catch(e) {
+            alert('Gagal menolak draft: ' + e);
+        }
+    }
+
+    async function flagInappropriateDraft() {
+        if (!currentSessionData || !currentSessionData.session_id) return;
+        const reason = prompt('Tandai ketidaksesuaian klinis / alasan flag:', 'Terdapat ketidaksesuaian konteks anamnesis');
+        if (!reason) return;
+
+        try {
+            const res = await fetch('/api/emr/review', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    session_id: currentSessionData.session_id,
+                    action: 'flag',
+                    actor: 'dr_spesialis',
+                    notes: reason
+                })
+            });
+            const d = await res.json();
+            if (d.status === 'success') {
+                alert('🚩 Informasi berhasil ditandai (flagged) untuk pemeriksaan lanjut komite rekam medis.');
+            }
+        } catch(e) {
+            alert('Gagal menandai informasi: ' + e);
+        }
+    }
+
+    async function approveCurrentDraft() {
+        if (!currentSessionData || !currentSessionData.session_id) return;
+        try {
+            const res = await fetch('/api/emr/review', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    session_id: currentSessionData.session_id,
+                    action: 'approve',
+                    actor: 'dr_spesialis',
+                    notes: 'Disetujui oleh dokter pemeriksa'
+                })
+            });
+            const d = await res.json();
+            if (d.status === 'success') {
+                currentSessionData.review_status = 'approved';
+                document.getElementById('reviewBadgeNeedsReview').style.display = 'none';
+                document.getElementById('reviewBadgeDraft').style.display = 'none';
+                document.getElementById('reviewBadgeApproved').style.display = 'inline-flex';
+                document.getElementById('btnApproveDraft').style.display = 'none';
+                document.getElementById('btnExportFHIR').style.display = 'inline-flex';
+                alert('Draft EMR berhasil diverifikasi & disetujui (Approved)! Sekarang dapat dikirim ke EMR.');
+            }
+        } catch(e) {
+            alert('Gagal menyetujui draft: ' + e);
+        }
+    }
+
+    async function exportCurrentDraft() {
+        if (!currentSessionData || !currentSessionData.session_id) return;
+        try {
+            const res = await fetch('/api/emr/export', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    session_id: currentSessionData.session_id,
+                    adapter_type: 'fhir',
+                    actor: 'dr_spesialis'
+                })
+            });
+            const d = await res.json();
+            if (d.status === 'success') {
+                alert(`Data berhasil dikirim ke EMR RS! Record ID: ${d.export_result.emr_record_id}`);
+            } else {
+                alert(`Pengiriman gagal: ${d.message || d.error}`);
+            }
+        } catch(e) {
+            alert('Gagal mengirim ke EMR: ' + e);
+        }
+    }
+
+    function renderCorrections(corrections) {
+        const cbox = document.getElementById('correctionsBox');
+        if (!corrections || corrections.length === 0) {
+            cbox.style.display = 'none';
+            return;
+        }
+        cbox.style.display = 'block';
+        cbox.innerHTML = `
+            <strong>🔍 Jejak Koreksi Fonetik &amp; Normalisasi Teks (${corrections.length} kata):</strong>
+            <ul style="margin-top:.4rem;padding-left:1.2rem;">
+                ${corrections.map(c => `
+                    <li>
+                        <code style="background:#fee2e2;color:#991b1b;padding:1px 4px;border-radius:3px;">${c.original}</code> → 
+                        <code style="background:#dcfce7;color:#166534;padding:1px 4px;border-radius:3px;">${c.corrected}</code> 
+                        <span style="color:#64748b;font-size:.75rem;">(${c.reason || 'Koreksi fonetik'})</span>
+                        ${c.review_required ? '<span style="color:#d97706;font-weight:600;font-size:.7rem;"> [Perlu Tinjauan]</span>' : ''}
+                    </li>
+                `).join('')}
+            </ul>
+        `;
+    }
+
+    // ── Confidence ────────────────────────────────────────────────
+    function renderConfidence(conf, review) {
+        const area = document.getElementById('confidenceArea');
+        const row  = document.getElementById('confidenceRow');
+        const wbox = document.getElementById('warningsBox');
+
+        if (!conf) { area.style.display = 'none'; return; }
+
+        area.style.display = 'block';
+
+        const levelClass = { 'TINGGI': 'conf-high', 'SEDANG': 'conf-medium', 'RENDAH': 'conf-low' };
+        const levelIcon  = { 'TINGGI': '✓', 'SEDANG': '⚠', 'RENDAH': '⚠' };
+        const cls = levelClass[conf.level] || 'conf-low';
+        const icon = levelIcon[conf.level] || '⚠';
+
+        let decoupledBadges = '';
+        if (conf.transcription !== undefined) {
+            decoupledBadges = `
+                <div style="margin-top:.4rem;display:flex;gap:.4rem;flex-wrap:wrap;font-size:.72rem;">
+                    <span class="pill pill-gray">Transkripsi: ${(conf.transcription * 100).toFixed(0)}%</span>
+                    <span class="pill pill-gray">Speaker: ${(conf.speaker * 100).toFixed(0)}%</span>
+                    <span class="pill pill-gray">Klinis: ${(conf.clinical_extraction * 100).toFixed(0)}%</span>
+                </div>
+            `;
+        }
+
+        row.innerHTML = `
+            <span class="conf-badge ${cls}">${icon} Status Validasi: ${conf.level} (Skor Keyakinan: ${conf.score}/100)</span>
+            ${decoupledBadges}
+        `;
+
+        const reasons = (review && review.reasons && review.reasons.length > 0) ? review.reasons : (conf.warnings || []);
+        if (reasons.length > 0) {
+            wbox.style.display = 'block';
+            wbox.innerHTML = `<strong>⚠ Perhatian &amp; Alasan Tinjauan Dokter:</strong><ul>${reasons.map(w => `<li>${w}</li>`).join('')}</ul>`;
+        } else {
+            wbox.style.display = 'none';
+        }
+    }
+
+    // ── Transcript Speaker Labels ─────────────────────────────────
+    function renderTranscript(segments, rawText, cleanedText) {
+        const card = document.getElementById('transcriptCard');
+        const box  = document.getElementById('transcriptBox');
+
+        const textToDisplay = (cleanedText || rawText || '').trim();
+        if (!textToDisplay) { card.style.display = 'none'; return; }
+
+        card.style.display = 'block';
+        box.innerHTML = '';
+
+        if (segments && segments.length > 0) {
+            segments.forEach(seg => {
+                const speaker = seg.speaker || 'Unknown';
+                const labelClass = speaker === 'Dokter' ? 'lbl-doctor'
+                                 : speaker === 'Pasien' ? 'lbl-patient'
+                                 : speaker === 'Pendamping' ? 'lbl-companion'
+                                 : speaker === 'Perawat' ? 'lbl-nurse'
+                                 : 'lbl-unknown';
+                const ts = seg.start !== undefined
+                    ? `${formatTime(seg.start)}–${formatTime(seg.end)}`
+                    : '';
+
+                const line = document.createElement('div');
+                line.className = 'speaker-line';
+                line.innerHTML = `
+                    <span class="speaker-label ${labelClass}">${speaker}</span>
+                    ${ts ? `<span class="speaker-timestamp">${ts}</span>` : ''}
+                    <span class="speaker-text">${escHtml(seg.text)}</span>
+                `;
+                box.appendChild(line);
+            });
+        } else {
+            box.innerHTML = `<div class="speaker-line"><span class="speaker-text">${escHtml(textToDisplay)}</span></div>`;
+        }
+    }
+
+    function formatTime(s) {
+        const m = Math.floor(s / 60);
+        const sec = (s % 60).toFixed(1);
+        return m > 0 ? `${m}:${String(sec).padStart(4,'0')}` : `${sec}s`;
+    }
+
+    function escHtml(str) {
+        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // ── Copy Form to Clipboard ────────────────────────────────────
+    function copyFormToClipboard() {
+        const utama    = document.getElementById('keluhanUtama').value.trim();
+        const tambahan = document.getElementById('keluhanTambahan').value.trim();
+        const lama     = document.getElementById('lamaSakit').value.trim();
+
+        if (!utama && !tambahan && !lama) {
+            alert('Formulir masih kosong, tidak ada yang disalin.');
+            return;
+        }
+
+        const formatted = 
+`KELUHAN UTAMA:
+${utama || '-'}
+
+KELUHAN TAMBAHAN / ANAMNESA:
+${tambahan || '-'}
+
+LAMA SAKIT / DURASI:
+${lama || '-'}`;
+
+        navigator.clipboard.writeText(formatted).then(() => {
+            const btn = document.getElementById('btnCopy');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '✓ Berhasil Disalin!';
+            btn.style.background = 'var(--green)';
+            setTimeout(() => {
+                btn.innerHTML = orig;
+                btn.style.background = '';
+            }, 2000);
+        }).catch(err => {
+            alert('Gagal menyalin: ' + err);
+        });
+    }
+
+    // ── Clear Form ────────────────────────────────────────────────
+    function clearForm() {
+        ['keluhanUtama','keluhanTambahan','lamaSakit'].forEach(id => {
+            document.getElementById(id).value = '';
+        });
+        document.getElementById('statusBadge').classList.remove('visible');
+        document.getElementById('confidenceArea').style.display = 'none';
+        document.getElementById('latencyBadge').style.display = 'none';
+        document.getElementById('transcriptCard').style.display = 'none';
+        document.getElementById('transcriptBox').innerHTML = '';
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+{
+  "status": "success",
+  "session_id": "VA-1790312729",
+  "audio_file": "rec_1790312728.webm",
+  "audio_url": "/audio/rec_1790312728.webm",
+  "audio_duration": 3.3,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 0.63,
+  "total_time": 0.63,
+  "raw_transcript": "Menghimun sakit panas.",
+  "layer1_phonetic": "Menghimun sakit panas.",
+  "cleaned_transcript": "Menghimun sakit panas.",
+  "labeled_segments": [
+    {
+      "start": 0.0,
+      "end": 3.3,
+      "text": "Menghimun sakit panas.",
+      "raw_text": "Menghimun sakit panas.",
+      "speaker": "Pasien"
+    }
+  ],
+  "pipeline_layers": {
+    "L1_phonetic": "Menghimun sakit panas.",
+    "L2_indonesia": "Menghimun sakit panas.",
+    "L3_speakers": 1,
+    "L4_medical": {
+      "chief": "Demam / Panas",
+      "secondary": [],
+      "duration": ""
+    }
+  },
+  "fields": {
+    "keluhan_utama": "Demam / Panas",
+    "keluhan_tambahan": "",
+    "lama_sakit": ""
+  },
+  "confidence": {
+    "level": "RENDAH",
+    "score": 5,
+    "warnings": [
+      "Transcript terlalu pendek — coba rekam lebih lama",
+      "Confidence rendah — coba rekam ulang dengan lebih jelas"
+    ]
+  },
+  "ml_classification": "KLINIS",
+  "timestamp": "2026-09-25T13:05:29.089296"
+}

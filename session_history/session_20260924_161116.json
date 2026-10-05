@@ -1,0 +1,39 @@
+{
+  "status": "success",
+  "session_id": "VA-1790237476",
+  "audio_file": "sample_2_perut_meriang.mp3",
+  "audio_url": "/audio/sample_2_perut_meriang.mp3",
+  "audio_duration": 10.22,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 2.36,
+  "total_time": 2.36,
+  "raw_transcript": "Ada keluhan apa bu hari ini? Anu doh, perut saya melilit dari kemarin malam. MMM terus badan agak meriang dan mual.",
+  "cleaned_transcript": "Ada keluhan apa bu hari ini? doh, perut saya melilit dari kemarin malam. terus badan agak meriang dan mual.",
+  "labeled_segments": [
+    {
+      "start": 0.0,
+      "end": 2.29,
+      "text": "Ada keluhan apa bu hari ini?",
+      "speaker": "Dokter"
+    },
+    {
+      "start": 2.29,
+      "end": 9.29,
+      "text": "Anu doh, perut saya melilit dari kemarin malam. MMM terus badan agak meriang dan mual.",
+      "speaker": "Pasien"
+    }
+  ],
+  "fields": {
+    "keluhan_utama": "Perut melilit",
+    "keluhan_tambahan": "Meriang, Mual",
+    "lama_sakit": "Dari Kemarin Malam"
+  },
+  "confidence": {
+    "level": "TINGGI",
+    "score": 100,
+    "warnings": []
+  },
+  "ml_classification": "KLINIS_KOMPREHENSIF",
+  "timestamp": "2026-09-24T16:11:16.980576"
+}

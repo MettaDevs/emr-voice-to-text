@@ -1,0 +1,77 @@
+{
+  "status": "success",
+  "session_id": "VA-1790239879",
+  "audio_file": "rec_1790239873.webm",
+  "audio_url": "/audio/rec_1790239873.webm",
+  "audio_duration": 27.78,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 6.22,
+  "total_time": 6.23,
+  "raw_transcript": "Malam, Dokter, kenapa keluhannya ya, Bu. Ini tuh saya tanas sama pilek juga. Kok belah tahu dari kataan panasnya? Tanasnya sih kemarin malam lanteng. Sekarang sudah mendingan sebenarnya coba gue cari obat aja. Oke, Bu, Coba saya cek dulu tanasnya ya.",
+  "layer1_phonetic": "Malam, Dokter, kenapa keluhannya ya, Bu. Ini tuh saya panas pilek juga. Kok belah tahu dari kataan panasnya? panas sih kemarin malam lanteng. Sekarang sudah mendingan sebenarnya coba gue cari obat aja. Oke, Bu, Coba saya cek dulu panas ya.",
+  "cleaned_transcript": "Malam, dokter, kenapa keluhannya ya, Bu. Ini saya panas pilek juga. Kok belah tahu dari kataan panasnya? panas kemarin malam lanteng. Sekarang sudah sudah membaik sebenarnya coba saya minum obat saja. Oke, Bu, Coba saya cek dulu panas ya.",
+  "labeled_segments": [
+    {
+      "start": 0.0,
+      "end": 4.66,
+      "text": "Malam, Dokter, kenapa keluhannya ya, Bu.",
+      "speaker": "Dokter"
+    },
+    {
+      "start": 4.66,
+      "end": 8.15,
+      "text": "Ini tuh saya panas pilek juga.",
+      "speaker": "Pasien"
+    },
+    {
+      "start": 8.15,
+      "end": 12.34,
+      "text": "Kok belah tahu dari kataan panasnya?",
+      "speaker": "Dokter"
+    },
+    {
+      "start": 12.34,
+      "end": 16.06,
+      "text": "panas sih kemarin malam lanteng.",
+      "speaker": "Pasien"
+    },
+    {
+      "start": 16.06,
+      "end": 22.93,
+      "text": "Sekarang sudah mendingan sebenarnya coba gue cari obat aja.",
+      "speaker": "Pasien"
+    },
+    {
+      "start": 22.93,
+      "end": 27.24,
+      "text": "Oke, Bu, Coba saya cek dulu panas ya.",
+      "speaker": "Dokter"
+    }
+  ],
+  "pipeline_layers": {
+    "L1_phonetic": "Malam, Dokter, kenapa keluhannya ya, Bu. Ini tuh saya panas pilek juga. Kok belah tahu dari kataan panasnya? panas sih kemarin malam lanteng. Sekarang sudah mendingan sebenarnya coba gue cari obat aja. Oke, Bu, Coba saya cek dulu panas ya.",
+    "L2_indonesia": "Malam, dokter, kenapa keluhannya ya, Bu. Ini saya panas pilek juga. Kok belah tahu dari kataan panasnya? panas kemarin malam lanteng. Sekarang sudah sudah membaik sebenarnya coba saya minum obat saja. Oke, Bu, Coba saya cek dulu panas ya.",
+    "L3_speakers": 6,
+    "L4_medical": {
+      "chief": "Demam / Panas",
+      "secondary": [
+        "Pilek",
+        "Sudah membaik"
+      ],
+      "duration": "Kemarin Malam"
+    }
+  },
+  "fields": {
+    "keluhan_utama": "Demam / Panas",
+    "keluhan_tambahan": "Pilek, Sudah membaik",
+    "lama_sakit": "Kemarin Malam"
+  },
+  "confidence": {
+    "level": "TINGGI",
+    "score": 100,
+    "warnings": []
+  },
+  "ml_classification": "KLINIS",
+  "timestamp": "2026-09-24T16:51:19.845660"
+}

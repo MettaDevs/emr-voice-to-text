@@ -1,0 +1,69 @@
+{
+  "status": "success",
+  "session_id": "VA-1790312622",
+  "audio_file": "rec_1790312620.webm",
+  "audio_url": "/audio/rec_1790312620.webm",
+  "audio_duration": 16.44,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 1.34,
+  "total_time": 1.34,
+  "raw_transcript": "Malam Dok, kemarin saya pusing. Hari ini panas juga sama pilek. Kalau udah tau dari kapan ya pilek sama pileksnya? Dari 2 hari lalu sih dok, tapi ini sekarang sudah mendingan.",
+  "layer1_phonetic": "Malam Dok, kemarin saya pusing. Hari ini panas juga sama pilek. Kalau udah tau dari kapan ya pilek sama pileksnya? Dari 2 hari lalu sih dok, tapi ini sekarang sudah mendingan.",
+  "cleaned_transcript": "Malam Dok, kemarin saya pusing. Hari ini panas juga sama pilek. Kalau sudah tau dari kapan ya pilek sama pileksnya? Dari 2 hari lalu dok, tapi ini sekarang sudah sudah membaik.",
+  "labeled_segments": [
+    {
+      "start": 0.0,
+      "end": 2.88,
+      "text": "Malam Dok, kemarin saya pusing.",
+      "raw_text": "Malam Dok, kemarin saya pusing.",
+      "speaker": "Pasien"
+    },
+    {
+      "start": 2.88,
+      "end": 5.76,
+      "text": "Hari ini panas juga sama pilek.",
+      "raw_text": "Hari ini panas juga sama pilek.",
+      "speaker": "Pasien"
+    },
+    {
+      "start": 5.76,
+      "end": 10.4,
+      "text": "Kalau sudah tau dari kapan ya pilek sama pileksnya?",
+      "raw_text": "Kalau udah tau dari kapan ya pilek sama pileksnya?",
+      "speaker": "Dokter"
+    },
+    {
+      "start": 10.4,
+      "end": 15.96,
+      "text": "Dari 2 hari lalu dok, tapi ini sekarang sudah sudah membaik.",
+      "raw_text": "Dari 2 hari lalu sih dok, tapi ini sekarang sudah mendingan.",
+      "speaker": "Pasien"
+    }
+  ],
+  "pipeline_layers": {
+    "L1_phonetic": "Malam Dok, kemarin saya pusing. Hari ini panas juga sama pilek. Kalau udah tau dari kapan ya pilek sama pileksnya? Dari 2 hari lalu sih dok, tapi ini sekarang sudah mendingan.",
+    "L2_indonesia": "Malam Dok, kemarin saya pusing. Hari ini panas juga sama pilek. Kalau sudah tau dari kapan ya pilek sama pileksnya? Dari 2 hari lalu dok, tapi ini sekarang sudah sudah membaik.",
+    "L3_speakers": 4,
+    "L4_medical": {
+      "chief": "Pusing",
+      "secondary": [
+        "Pilek",
+        "Sudah membaik"
+      ],
+      "duration": "Dari 2 Hari"
+    }
+  },
+  "fields": {
+    "keluhan_utama": "Pusing",
+    "keluhan_tambahan": "Pilek, Sudah membaik",
+    "lama_sakit": "Dari 2 Hari"
+  },
+  "confidence": {
+    "level": "TINGGI",
+    "score": 100,
+    "warnings": []
+  },
+  "ml_classification": "KLINIS",
+  "timestamp": "2026-09-25T13:03:42.132418"
+}

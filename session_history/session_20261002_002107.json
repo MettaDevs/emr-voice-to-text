@@ -1,0 +1,71 @@
+{
+  "status": "success",
+  "session_id": "VA-1790871667",
+  "audio_file": "rec_1790871664.webm",
+  "audio_url": "/audio/rec_1790871664.webm",
+  "audio_duration": 2.76,
+  "detected_language": "id",
+  "language_probability": 1,
+  "transcription_time": 3.72,
+  "total_time": 3.76,
+  "raw_transcript": "Tes, 1 2 3. Malam Dok.",
+  "layer1_phonetic": "Tes, 1 2 3. Malam Dok.",
+  "cleaned_transcript": "Tes, 1 2 3. Malam Dok.",
+  "labeled_segments": [
+    {
+      "start": 0.05,
+      "end": 1.36,
+      "text": "Tes, 1 2 3.",
+      "raw_text": "Tes, 1 2 3.",
+      "speaker": "Pasien"
+    },
+    {
+      "start": 1.36,
+      "end": 2.55,
+      "text": "Malam Dok.",
+      "raw_text": "Malam Dok.",
+      "speaker": "Pasien"
+    }
+  ],
+  "clinical_entities": {
+    "vitals": {},
+    "allergies": {
+      "ada_alergi": false,
+      "alergen": [],
+      "disangkal": false
+    },
+    "patient_turns": 2,
+    "doctor_turns": 0
+  },
+  "pipeline_layers": {
+    "L1_phonetic": "Tes, 1 2 3. Malam Dok.",
+    "L2_indonesia": "Tes, 1 2 3. Malam Dok.",
+    "L3_speakers": 2,
+    "L4_medical": {
+      "chief": "",
+      "secondary": [],
+      "structured_secondary": [],
+      "duration": "",
+      "vitals": {},
+      "allergies": {
+        "ada_alergi": false,
+        "alergen": [],
+        "disangkal": false
+      }
+    }
+  },
+  "fields": {
+    "keluhan_utama": "",
+    "keluhan_tambahan": "",
+    "lama_sakit": ""
+  },
+  "confidence": {
+    "level": "RENDAH",
+    "score": 0,
+    "warnings": [
+      "Keluhan utama tidak terdeteksi — pastikan pasien menyebutkan gejalanya"
+    ]
+  },
+  "ml_classification": "KOSONG",
+  "timestamp": "2026-10-02T00:21:07.999654"
+}
