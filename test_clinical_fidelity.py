@@ -152,6 +152,32 @@ class TestClinicalFidelity(unittest.TestCase):
         self.assertEqual(res["lama_sakit"], "", "Durasi tidak boleh diisi jika pasien menyatakan lupa")
         self.assertIsNone(res["duration"], "Structured duration harus None")
 
+    # ── Rule 11: Turn Switch Splitting in Continuous Segment ────────────────
+    def test_doctor_patient_turn_split_in_continuous_segment(self):
+        """Turn switch: '...surat DC juga, ya bu, coba kita cek tensi dulu ya' harus memisahkan Dokter vs Pasien."""
+        raw_segments = [
+            {"start": 0.7, "end": 2.9, "text": "Malam dok, malam."},
+            {"start": 2.9, "end": 7.9, "text": "Kalau boleh tahu keluhannya apa ya bu?"},
+            {"start": 7.9, "end": 29.2, "text": "Ini dok, saya pusing dari kemarin, sama panas juga badannya, kalau panasnya dari semalam dok ya, sama mau cari surat DC juga, ya bu, coba kita cek tensi dulu ya."}
+        ]
+        res = self.extractor.extract(" ".join(s["text"] for s in raw_segments), segments=raw_segments)
+        labeled = res["labeled_segments"]
+
+        # Harus terbagi menjadi 4 segmen dialog
+        self.assertEqual(len(labeled), 4)
+
+        # Periksa segmen terakhir adalah ucapan dokter mengenai pemeriksaan tensi
+        last_seg = labeled[-1]
+        self.assertEqual(last_seg["speaker"], "Dokter")
+        self.assertEqual(last_seg["speaker_role"], "doctor")
+        self.assertIn("cek tensi", last_seg["text"].lower())
+
+        # Periksa segmen sebelum terakhir adalah ucapan pasien
+        penultimate_seg = labeled[-2]
+        self.assertEqual(penultimate_seg["speaker"], "Pasien")
+        self.assertEqual(penultimate_seg["speaker_role"], "patient")
+        self.assertIn("pusing", penultimate_seg["text"].lower())
+
 
 if __name__ == "__main__":
     unittest.main()

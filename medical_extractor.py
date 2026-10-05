@@ -285,8 +285,12 @@ DOCTOR_EXPLICIT_ACTIONS = [
     r'\bobat\s+apa\s+yang\s+(?:sudah|pernah)\b',
     r'\bpernah\s+(?:sakit|dirawat|operasi)\b',
     # Pemeriksaan Fisik & Prosedur Medis
-    r'\b(?:coba|mari|boleh|kita)\s+(?:saya\s+)?(?:cek|periksa|lihat|dengar)\b',
-    r'\bkita\s+(?:cek|periksa)\s+dulu\b',
+    r'\b(?:coba|mari|boleh|kita)\s+(?:saya\s+)?(?:cek|periksa|lihat|dengar|timbang|ukur)\b',
+    r'\b(?:coba|mari|kita)\s+(?:cek|periksa|ukur)\s+(?:tensi|suhu|darah|berat)\b',
+    r'\b(?:coba\s+)?timbang\s+(?:dulu|berat\s+badan)\b',
+    r'\bkita\s+(?:cek|periksa|timbang)\s+dulu\b',
+    r'\bcek\s+tensi(?:nya)?\s+dulu\b',
+    r'\b(?:ya|iya|oke|baik)\s+(?:bu|pak|mas|mbak)[,.]*\s+(?:coba|kita|mari|silakan)\s+(?:cek|periksa|tensi|lihat)\b',
     r'\b(?:tarik|hembuskan|buang)\s+napas\b',
     r'\bbuka\s+mulutnya\b|\bjulurkan\s+lidah\b|\bbilang\s+aah\b',
     r'\b(?:tiduran|berbaring)\s+di\s+(?:sini|bed|ranjang)\b',
@@ -344,7 +348,8 @@ NURSE_EXPLICIT_CUES = [
 def _split_into_dialogue_sentences(text: str) -> list[str]:
     """
     Pecah paragraf atau transkrip percakapan menjadi kalimat-kalimat tutur utuh.
-    Mendeteksi batas pergantian pembicara (turn transitions) meskipun tanpa tanda baca formal.
+    Mendeteksi batas pergantian pembicara (turn transitions) meskipun tanpa tanda baca formal,
+    seperti pergantian giliran pasien mengeluh -> dokter merespon/memeriksa fisik ("ya bu, coba kita cek tensi...").
     """
     if not text or not text.strip():
         return []
@@ -365,11 +370,33 @@ def _split_into_dialogue_sentences(text: str) -> list[str]:
         r'\1? ', t, flags=re.I
     )
 
-    # 3. Transisi tanda tanya yang menempel dengan kata berikutnya
+    # 3. Transisi: Tuturan Pasien -> Instruksi/Pemeriksaan/Tanggapan Dokter
+    # Contoh: "...surat DC juga, ya bu, coba kita cek tensi dulu ya" -> "...surat DC juga. ya bu, coba kita cek tensi dulu ya"
+    doc_turn_patterns = [
+        r'(?:ya|iya|oke|baik|mari|nah)\s+(?:bu|pak|mas|mbak|bapak|ibu)[,.]*\s+(?:coba|kita|saya|mari|silakan|tolong|periksa|cek|timbang|ukur|tiduran|berbaring|duduk|nanti|sekarang|ini|tensinya|suhunya|\bdulu\b)\b',
+        r'(?:coba|silakan|mari|tolong)\s+(?:(?:saya|kita)\s+)?(?:cek|periksa|lihat|dengar|timbang|ukur|duduk|berbaring|tiduran)\b',
+        r'(?:coba|silakan|mari|tolong)\s+(?:cek|periksa)\s+(?:tensi|suhu|darah)\b',
+        r'coba\s+timbang\s+dulu\b',
+        r'(?<!coba\s)(?<!mari\s)kita\s+(?:cek|periksa|timbang|ukur)\s+(?:tensi|suhu|darah|dulu)\b',
+        r'buka\s+mulutnya\b',
+        r'tarik\s+napas(?:nya)?\b',
+    ]
+    doc_combined = '|'.join(f'(?:{p})' for p in doc_turn_patterns)
+    t = re.sub(rf'([a-zA-Z0-9])[,.]?\s+({doc_combined})', r'\1. \2', t, flags=re.I)
+
+    # 4. Transisi: Tuturan Dokter -> Respon/Konfirmasi Pasien
+    # Contoh: "coba kita periksa dulu ya, iya dok" -> "coba kita periksa dulu ya. iya dok"
+    pat_turn_patterns = [
+        r'(?:iya|ya|baik|siap|makasih|terima\s+kasih|bisa)\s+dok(?:ter)?\b',
+    ]
+    pat_combined = '|'.join(f'(?:{p})' for p in pat_turn_patterns)
+    t = re.sub(rf'([a-zA-Z0-9])[,.]?\s+({pat_combined})', r'\1. \2', t, flags=re.I)
+
+    # 5. Transisi tanda tanya yang menempel dengan kata berikutnya
     t = re.sub(r'\?([^\s.?!])', r'? \1', t)
     t = re.sub(r'\?+', '?', t)
 
-    # 4. Pemecahan standar berdasarkan tanda baca kalimat
+    # 6. Pemecahan standar berdasarkan tanda baca kalimat
     parts = re.split(r'(?<=[.?!])\s+', t)
     cleaned = []
     for p in parts:
