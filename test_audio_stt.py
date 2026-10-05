@@ -173,6 +173,30 @@ class TestAudioCaptureAndSTT(unittest.TestCase):
         self.assertEqual(res["text"], "")
         self.assertIn("hening", res["warning"].lower())
 
+    def test_11_webm_multi_chunk_assembly_long_duration(self):
+        """Memastikan perakitan chunk WebM multi-potongan menggabungkan seluruh durasi percakapan tanpa terpotong di chunk 0."""
+        import glob
+        sessions = sorted(glob.glob("uploads/sessions/*"))
+        sample_sess = None
+        for s in sessions:
+            chk = glob.glob(os.path.join(s, "chunk_*.webm"))
+            if len(chk) >= 3:
+                sample_sess = s
+                break
+        if sample_sess:
+            sess_id = "SESS-TEST-WEBM-001"
+            sm = AudioSessionManager(storage_dir=self.test_dir)
+            sm.start_session(sess_id)
+            chunks = sorted(glob.glob(os.path.join(sample_sess, "chunk_*.webm")))
+            for idx, c in enumerate(chunks):
+                with open(c, "rb") as cf:
+                    sm.add_chunk(sess_id, idx, cf.read(), idx * 2.0, (idx + 1) * 2.0, ".webm")
+
+            out_wav, diag = sm.assemble_session_audio(sess_id)
+            self.assertTrue(diag["valid"])
+            self.assertGreater(diag["total_duration_seconds"], 3.5)
+            self.assertEqual(diag["total_chunks_received"], len(chunks))
+
 
 if __name__ == "__main__":
     unittest.main()

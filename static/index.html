@@ -908,8 +908,10 @@
                     })
                 }).catch(e => console.warn("Session init warning:", e));
 
+                let pendingChunkPromises = [];
+
                 // Mengumpulkan & mengirimkan audio chunk setiap 2000ms (Section 3)
-                mediaRecorder.ondataavailable = async e => {
+                mediaRecorder.ondataavailable = e => {
                     if (e.data && e.data.size > 0) {
                         audioChunks.push(e.data);
                         const seq = currentSequenceId++;
@@ -922,14 +924,10 @@
                         fd.append('end_time', ((seq + 1) * 2.0));
                         fd.append('file', chunkBlob, `chunk_${seq}.webm`);
 
-                        try {
-                            const res = await fetch('/api/audio/chunk', { method: 'POST', body: fd });
-                            if (res.ok) {
-                                p2.classList.add('active');
-                            }
-                        } catch(err) {
-                            console.warn("Chunk send retry warning:", err);
-                        }
+                        const p = fetch('/api/audio/chunk', { method: 'POST', body: fd })
+                            .then(res => { if (res.ok) p2.classList.add('active'); })
+                            .catch(err => console.warn("Chunk upload warning:", err));
+                        pendingChunkPromises.push(p);
                     }
                 };
 
@@ -945,26 +943,45 @@
                     setMicState('transcribing');
                     p3.classList.add('active');
 
+                    // Tunggu semua upload chunk in-flight selesai sebelum perakitan di backend
+                    try {
+                        await Promise.all(pendingChunkPromises);
+                    } catch(err) {
+                        console.warn("Menunggu chunk in-flight:", err);
+                    }
+
                     // Selesaikan sesi chunking secara terpadu
                     try {
                         const fd = new FormData();
                         fd.append('session_id', currentSessionId);
                         let res = await fetch('/api/audio/session/complete', { method: 'POST', body: fd });
                         
-                        // Fallback ke upload blob penuh jika perakitan chunk bermasalah
-                        if (!res.ok) {
-                            console.warn("Session complete fallback to full blob upload...");
-                            const blob = new Blob(audioChunks, { type: 'audio/webm' });
-                            const file = new File([blob], 'konsultasi_medis.webm', { type: 'audio/webm' });
-                            const fullFd = new FormData();
-                            fullFd.append('file', file);
-                            res = await fetch('/api/process-upload', { method: 'POST', body: fullFd });
+                        let data = null;
+                        if (res.ok) {
+                            data = await res.json();
                         }
 
-                        const data = await res.json();
-                        renderResult(data);
-                        setMicState('completed');
-                        p4.classList.add('active');
+                        // Fallback ke upload blob utuh jika backend gagal merakit atau durasi terdeteksi anomali/terpotong
+                        const isShort = data && data.audio_diagnostics && recordingSeconds > 4 && data.audio_diagnostics.duration_seconds < (recordingSeconds * 0.4);
+                        if (!res.ok || !data || !data.raw_transcript || isShort) {
+                            console.warn("Memicu fallback transmisi full blob rekaman...");
+                            const blob = new Blob(audioChunks, { type: mimeType });
+                            const file = new File([blob], 'konsultasi_medis.webm', { type: mimeType });
+                            const fullFd = new FormData();
+                            fullFd.append('file', file);
+                            const fallbackRes = await fetch('/api/process-upload', { method: 'POST', body: fullFd });
+                            if (fallbackRes.ok) {
+                                data = await fallbackRes.json();
+                            }
+                        }
+
+                        if (data) {
+                            renderResult(data);
+                            setMicState('completed');
+                            p4.classList.add('active');
+                        } else {
+                            throw new Error("Gagal menerima respons transkripsi audio.");
+                        }
                     } catch (e) {
                         alert('Gagal memproses rekaman: ' + e);
                         setMicState('error');

@@ -190,33 +190,69 @@ class AudioSessionManager:
         received_count = len(sorted_chunks)
         missing_count = expected_count - received_count
 
-        all_audio_frames = []
-        resampler = av.AudioResampler(format="fltp", layout="mono", rate=16000)
+        combined_np = None
+        first_chunk = sorted_chunks[0]
+        ext = os.path.splitext(first_chunk.file_path)[1].lower()
 
-        for c in sorted_chunks:
-            if not os.path.exists(c.file_path) or os.path.getsize(c.file_path) == 0:
-                continue
+        # ── 1. Pendekatan Stream Byte Concatenation (Khusus WebM/Opus Browser) ──
+        # Browser MediaRecorder menghasilkan 1 file WebM kontinu yang dipotong menjadi chunks.
+        # Hanya chunk 0 yang memiliki EBML Header, sedangkan chunk 1..N adalah Clusters.
+        # Menggabungkan raw bytes memungkinkan PyAV membaca seluruh percakapan tanpa terpotong di 2 detik pertama!
+        if ext in [".webm", ".ogg", ".opus", ".mkv"]:
             try:
-                container = av.open(c.file_path)
-                if container.streams.audio:
-                    for frame in container.decode(audio=0):
-                        for r_frame in resampler.resample(frame):
-                            all_audio_frames.append(r_frame.to_ndarray())
-                container.close()
+                raw_bytes = bytearray()
+                for c in sorted_chunks:
+                    if os.path.exists(c.file_path):
+                        with open(c.file_path, "rb") as cf:
+                            raw_bytes.extend(cf.read())
+
+                if raw_bytes:
+                    import io
+                    container = av.open(io.BytesIO(raw_bytes))
+                    if container.streams.audio:
+                        stream = container.streams.audio[0]
+                        resampler = av.AudioResampler(format="fltp", layout="mono", rate=16000)
+                        frames = []
+                        for frame in container.decode(stream):
+                            for r_frame in resampler.resample(frame):
+                                frames.append(r_frame.to_ndarray())
+                        container.close()
+                        if frames:
+                            combined_np = np.concatenate(frames, axis=1)[0].astype(np.float32)
             except Exception as e:
-                # Catat peringatan jika decode chunk gagal
-                c.status = "failed"
-                c.error = str(e)
+                # Jika stream concat gagal, lanjut ke per-chunk decoding fallback
+                combined_np = None
 
-        if not all_audio_frames:
-            return None, {
-                "valid": False,
-                "error": "Seluruh chunk audio gagal didecode atau kosong.",
-                "total_chunks": received_count,
-                "missing_chunks": missing_count
-            }
+        # ── 2. Pendekatan Per-Chunk Decoding (Untuk WAV/PCM Mandiri) ──
+        if combined_np is None:
+            all_audio_frames = []
+            resampler = av.AudioResampler(format="fltp", layout="mono", rate=16000)
 
-        combined_np = np.concatenate(all_audio_frames, axis=1)[0].astype(np.float32)
+            for c in sorted_chunks:
+                if not os.path.exists(c.file_path) or os.path.getsize(c.file_path) == 0:
+                    continue
+                try:
+                    container = av.open(c.file_path)
+                    if container.streams.audio:
+                        for frame in container.decode(audio=0):
+                            for r_frame in resampler.resample(frame):
+                                all_audio_frames.append(r_frame.to_ndarray())
+                    container.close()
+                except Exception as e:
+                    # Catat peringatan jika decode chunk gagal
+                    c.status = "failed"
+                    c.error = str(e)
+
+            if not all_audio_frames:
+                return None, {
+                    "valid": False,
+                    "error": "Seluruh chunk audio gagal didecode atau kosong.",
+                    "total_chunks": received_count,
+                    "missing_chunks": missing_count
+                }
+
+            combined_np = np.concatenate(all_audio_frames, axis=1)[0].astype(np.float32)
+
         total_duration = round(len(combined_np) / 16000.0, 3)
 
         # Simpan file WAV gabungan
