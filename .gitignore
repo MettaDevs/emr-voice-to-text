@@ -14,6 +14,8 @@ __pycache__/
 uploads/
 test_audio_tmp/
 .tempmediaStorage/
+session_history/*.json
+audit_logs/*.jsonl
 
 # OS / Editor Files
 .DS_Store
