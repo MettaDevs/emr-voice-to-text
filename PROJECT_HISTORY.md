@@ -216,3 +216,20 @@ Fokus utama penyempurnaan penangkapan suara menjadi teks yang jernih, sensitif, 
    - **Empty Transcription Rate: 0.00%**.
    - **Kecepatan Proses: 1.08 detik** (RTF: 0.111x real-time di GPU RTX 3050 CUDA FP16).
 
+## 10. Perbaikan Ekstraksi Gejala Tenggorokan & Penanganan Kata Keterangan (v3.4)
+
+Berdasarkan temuan kasus dialog medis di mana keluhan `"tenggorokan juga agak sakit"` tidak tercatat di Keluhan Tambahan:
+1. **Perbaikan Substring Negasi pada Kata Keterangan Adverbia (`medical_extractor.py`):**
+   - Fungsi `_is_symptom_negated` sebelumnya melakukan pencarian substring sederhana `neg in t` untuk kata negasi seperti `"gak"`.
+   - Karena `"gak"` merupakan substring dari kata `"agak"` (`a-gak`), setiap frasa keluhan yang mengandung adverbia `"agak"` (misalnya `"agak sakit"`, `"tenggorokan juga agak sakit"`, `"agak lemas"`) keliru diklasifikasikan sebagai keluhan dinegasikan (*absent*).
+   - Diperbaiki menggunakan batas kata regex `\b(?:tidak|nggak|gak|ngga|bukan|tanpa|bebas|belum)\b` sehingga kata `"agak"` tidak lagi memicu negasi.
+2. **Fleksibilitas Pola Gejala Tenggorokan (`SECONDARY_PATTERNS`):**
+   - Regex keluhan tenggorokan sebelumnya kaku (`\bsakit\s+tenggorokan\b|\btenggorokan\s+sakit\b`), sehingga gagal mencocokkan frase dengan kata sisipan/adverbia seperti `"tenggorokan juga agak sakit"`.
+   - Diperluas menjadi `\b(?:sakit|nyeri|radang|perih)\s+(?:pada\s+|di\s+)?tenggorokan\b|\btenggorokan(?:\s+\w+){0,3}\s+(?:sakit|nyeri|perih|radang)\b`.
+3. **Penyelarasan Cross-Turn Anamnesis:**
+   - Memastikan jawaban pasien yang mengonfirmasi gejala (misal *"Ada sedikit batuk..."*) tidak keliru dianggap penolakan cross-turn hanya karena mengandung kata *"tidak sering/tidak parah"*.
+   - Melindungi gejala berstatus `present` agar tidak ditimpa menjadi `absent`.
+4. **Hasil Pengujian & Regresi Klinis:**
+   - `test_clinical_fidelity.py`: **12/12 PASS (100%)**.
+   - Dialog uji coba berhasil mengekstrak `Keluhan Tambahan: Batuk, Badan lemas, Sakit tenggorokan` dan mual/muntah berstatus disangkal (*absent*).
+

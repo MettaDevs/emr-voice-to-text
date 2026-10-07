@@ -178,6 +178,35 @@ class TestClinicalFidelity(unittest.TestCase):
         self.assertEqual(penultimate_seg["speaker_role"], "patient")
         self.assertIn("pusing", penultimate_seg["text"].lower())
 
+    # ── Rule 12: Ekstraksi Gejala dengan Kata Keterangan (Adverb) & Cross-Turn ───
+    def test_throat_and_cough_symptom_with_adverbs(self):
+        """Ucapan 'Ada sedikit batuk tapi tidak terlalu sering, tenggorokan juga agak sakit'
+        harus mengekstrak batuk dan sakit tenggorokan sebagai present, bukan absent."""
+        segments = [
+            {"start": 0.6, "end": 5.4, "text": "Pagi dok, saya merasa panas dan badan saya agak lemas."},
+            {"start": 5.4, "end": 8.4, "text": "Demamnya mulai terasa sejak kapan?"},
+            {"start": 8.4, "end": 10.4, "text": "Sejak kemarin sore dok."},
+            {"start": 10.4, "end": 14.5, "text": "Apakah ada batuk pilek atau sakit tenggorokan?"},
+            {"start": 14.5, "end": 20.9, "text": "Ada sedikit batuk tapi tidak terlalu sering, tenggorokan juga agak sakit."},
+            {"start": 20.9, "end": 23.4, "text": "Apakah ada mual atau muntah?"},
+            {"start": 23.4, "end": 28.0, "text": "Tidak ada dok, tapi nafsu makan saya agak berkurang."}
+        ]
+        full_text = " ".join(s["text"] for s in segments)
+        res = self.extractor.extract(full_text, segments=segments)
+        symptoms = {s["name"].lower(): s["status"] for s in res.get("symptoms", [])}
+
+        self.assertEqual(symptoms.get("sakit tenggorokan"), "present",
+                         "Sakit tenggorokan harus diekstrak sebagai present")
+        self.assertEqual(symptoms.get("batuk"), "present",
+                         "Batuk harus diekstrak sebagai present")
+        self.assertEqual(symptoms.get("mual"), "absent",
+                         "Mual yang disangkal harus diekstrak sebagai absent")
+        self.assertEqual(symptoms.get("muntah"), "absent",
+                         "Muntah yang disangkal harus diekstrak sebagai absent")
+        self.assertIn("sakit tenggorokan", res["keluhan_tambahan"].lower(),
+                         "Sakit tenggorokan harus muncul di keluhan tambahan")
+
 
 if __name__ == "__main__":
     unittest.main()
+

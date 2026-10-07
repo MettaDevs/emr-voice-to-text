@@ -825,9 +825,9 @@ SECONDARY_PATTERNS = [
     (r'\bsembelit\b|\bsusah\s+bab\b',                   'Sembelit'),
     (r'\bpegal[-\s]?pegal\s+linu\b|\bpegal[-\s]?linu\b|\bpegal\b|\bpegel\b', 'Pegal linu'),
     (r'\blemas\b|\blesu\b|\bbadan\s+lemas\b',           'Badan lemas'),
-    (r'\btenggorokan\s+gatal\b',                        'Tenggorokan gatal'),
-    (r'\bsakit\s+tenggorokan\b|\btenggorokan\s+sakit\b','Sakit tenggorokan'),
-    (r'\bnelen\s+sakit\b|\bsakit\s+menelan\b',          'Nyeri menelan'),
+    (r'\btenggorokan(?:\s+\w+){0,2}\s+gatal\b|\bgatal(?:\s+\w+){0,2}\s+tenggorokan\b', 'Tenggorokan gatal'),
+    (r'\b(?:sakit|nyeri|radang|perih)\s+(?:pada\s+|di\s+)?tenggorokan\b|\btenggorokan(?:\s+\w+){0,3}\s+(?:sakit|nyeri|perih|radang)\b', 'Sakit tenggorokan'),
+    (r'\b(?:nelen|menelan)(?:\s+\w+){0,2}\s+(?:sakit|perih|nyeri)\b|\b(?:sakit|nyeri|perih)(?:\s+\w+){0,2}\s+(?:buat\s+|untuk\s+)?(?:nelen|menelan)\b', 'Nyeri menelan'),
     (r'\bsuara\s+serak\b',                              'Suara serak'),
     (r'\bmenggigil\b',                                   'Menggigil'),
     (r'\bsusah\s+tidur\b|\binsomnia\b',                 'Susah tidur'),
@@ -1203,7 +1203,7 @@ def _is_symptom_negated(term: str, sentence: str) -> bool:
     """Cek apakah istilah gejala (term) dinegasikan di dalam kalimat tertentu."""
     clean_s = sentence.lower()
     t = term.lower()
-    if any(neg in t for neg in ["tidak", "nggak", "gak", "ngga", "bukan", "tanpa", "bebas", "belum"]):
+    if re.search(r'\b(?:tidak|nggak|gak|ngga|bukan|tanpa|bebas|belum)\b', t):
         return True
     if not re.search(r'\b' + re.escape(t) + r'\b', clean_s):
         return False
@@ -1815,10 +1815,16 @@ def _extract_structured_symptoms(normalized: str, chief: str, labeled_segments: 
 
             # Jika dokter bertanya gejala dan pasien menyangkal (tidak ada / nggak ada / tidak)
             if r1 in ["doctor", "Dokter"] and r2 in ["patient", "companion", "Pasien", "Pendamping"]:
-                is_denial = bool(re.search(r'\b(?:tidak\s+ada|nggak\s+ada|gak\s+ada|ngga\s+ada|belum\s+ada|tidak|nggak|gak|nihil)\b', t2, re.I))
+                is_affirmative = bool(re.search(r'^\s*(?:ada|iya|ya|betul|memang|terasa|merasa)\b|\bada\s+(?:sedikit|agak|keluhan)\b', t2, re.I))
+                is_denial = (bool(re.search(r'\b(?:tidak\s+ada|nggak\s+ada|gak\s+ada|ngga\s+ada|belum\s+ada|nihil)\b', t2, re.I)) or (
+                    bool(re.search(r'^\s*(?:tidak|nggak|gak|bukan)\b', t2, re.I)) and not re.search(r'\b(?:tidak\s+terlalu|tidak\s+begitu|tidak\s+sering|tidak\s+parah)\b', t2, re.I)
+                )) and not is_affirmative
                 if is_denial:
                     for pat, label in SECONDARY_PATTERNS:
                         if re.search(pat, t1, re.I):
+                            # Jika gejala ini sudah terdeteksi 'present' dari ucapan pasien, jangan ditimpa jadi absent
+                            if any(s.get("name", "").lower() == label.lower() and s.get("status") == "present" for s in symptoms):
+                                continue
                             key = (label.lower(), "absent")
                             if key not in seen and not _is_same_symptom(label, chief):
                                 b_part = "Sistemik"
