@@ -206,7 +206,47 @@ class TestClinicalFidelity(unittest.TestCase):
         self.assertIn("sakit tenggorokan", res["keluhan_tambahan"].lower(),
                          "Sakit tenggorokan harus muncul di keluhan tambahan")
 
+    # ── Rule 13: Parsing Numerik Durasi / Lama Sakit (Thn / Bln / Hari) ─────────
+    def test_numeric_duration_parsing(self):
+        """Memverifikasi parsing durasi klinis ke nilai angka Tahun, Bulan, Hari (CoreERP EMR)."""
+        # Kasus 1: "Sejak kemarin sore" -> 1 hari
+        res1 = self.extractor.extract("Dokter: Sakit sejak kapan? Pasien: Sejak kemarin sore dok.")
+        dur1 = res1.get("duration")
+        self.assertIsNotNone(dur1)
+        self.assertEqual(dur1["days"], 1)
+        self.assertEqual(dur1["thn"], "")
+        self.assertEqual(dur1["bln"], "")
+        self.assertEqual(dur1["hari"], "1")
+        self.assertEqual(res1["fields"]["lama_sakit_hari"], "1")
+
+        # Kasus 2: "Sudah 3 hari" -> 3 hari
+        res2 = self.extractor.extract("Pasien: Saya pusing sudah 3 hari.")
+        dur2 = res2.get("duration")
+        self.assertEqual(dur2["days"], 3)
+        self.assertEqual(dur2["hari"], "3")
+
+        # Kasus 3: "2 minggu" -> 14 hari
+        res3 = self.extractor.extract("Pasien: Batuk sudah 2 minggu dok.")
+        dur3 = res3.get("duration")
+        self.assertEqual(dur3["days"], 14)
+        self.assertEqual(dur3["hari"], "14")
+
+        # Kasus 4: "1 bulan" -> 1 bulan
+        res4 = self.extractor.extract("Pasien: Sakit pinggang sudah 1 bulan.")
+        dur4 = res4.get("duration")
+        self.assertEqual(dur4["months"], 1)
+        self.assertEqual(dur4["bln"], "1")
+
+        # Kasus 5: "1 tahun 2 bulan" -> 1 tahun, 2 bulan
+        res5 = self.extractor.extract("Pasien: Keluhan ini sudah 1 tahun 2 bulan dok.")
+        dur5 = res5.get("duration")
+        self.assertEqual(dur5["years"], 1)
+        self.assertEqual(dur5["months"], 2)
+        self.assertEqual(dur5["thn"], "1")
+        self.assertEqual(dur5["bln"], "2")
+
 
 if __name__ == "__main__":
     unittest.main()
+
 

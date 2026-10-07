@@ -852,6 +852,8 @@ UNIT_WORDS = r'(?:hari|minggu|bulan|tahun|jam)'
 DUR_PREFIX = r'(?:dari|sejak|sudah|selama|sekitar|kurang\s+lebih|kira[-\s]?kira|hampir|baru|udah)'
 
 DURATION_PATTERNS = [
+    # "sudah 1 tahun 2 bulan", "1 bulan 5 hari", "2 minggu 3 hari" (durasi gabungan/compound)
+    r'\b((?:(?:' + DUR_PREFIX + r')\s+)?' + NUM_WORDS + r'\s+' + UNIT_WORDS + r'(?:\s+(?:dan|lewat)?\s*' + NUM_WORDS + r'\s+' + UNIT_WORDS + r')+(?:\s*(?:yang\s+lalu|lalu|ini|terakhir))?)\b',
     # "dari/sejak/sudah/sekitar N hari/minggu/bulan (lalu/ini/terakhir)"
     r'\b((?:' + DUR_PREFIX + r')\s+' + NUM_WORDS + r'\s+' + UNIT_WORDS + r'(?:\s*(?:yang\s+lalu|lalu|ini|terakhir))?)\b',
     # "dari/sejak/sudah kemarin malam/pagi/siang/sore/lusa"
@@ -1109,10 +1111,105 @@ def _extract_duration(normalized: str) -> tuple:
 
 
 WORD_TO_NUMBER = {
-    "satu": 1, "sehari": 1, "seminggu": 1, "sebulan": 1, "setahun": 1, "seharian": 1, "semalam": 1,
-    "dua": 2, "tiga": 3, "empat": 4, "lima": 5, "enam": 6, "tujuh": 7,
-    "delapan": 8, "sembilan": 9, "sepuluh": 10, "sebelas": 11, "dua belas": 12
+    "sehari": 1, "seminggu": 1, "sebulan": 1, "setahun": 1, "seharian": 1, "semalam": 1,
+    "satu": 1, "dua": 2, "tiga": 3, "empat": 4, "lima": 5, "enam": 6, "tujuh": 7,
+    "delapan": 8, "sembilan": 9, "sepuluh": 10, "sebelas": 11, "dua belas": 12,
+    "tiga belas": 13, "empat belas": 14, "lima belas": 15, "dua puluh": 20,
+    "tiga puluh": 30, "beberapa": 3, "dua tiga": 2, "tiga empat": 3
 }
+
+
+def _parse_duration_num(s: str) -> int | None:
+    if not s:
+        return None
+    s = s.strip().lower()
+    m = re.search(r'\b(\d+)\b', s)
+    if m:
+        return int(m.group(1))
+    for w, n in WORD_TO_NUMBER.items():
+        if re.search(r'\b' + re.escape(w) + r'\b', s):
+            return n
+    return None
+
+
+def _parse_duration_to_numbers(dur_str: str) -> dict:
+    """
+    Mengonversi string durasi / lama sakit klinis bahasa Indonesia ke format numerik
+    standar Rekam Medis (Tahun / Bulan / Hari).
+    Contoh:
+      - 'Sejak kemarin sore' -> {'tahun': 0, 'bulan': 0, 'hari': 1, 'thn': '', 'bln': '', 'hari_display': '1', 'total_days': 1}
+      - 'Sudah 3 hari dok'   -> {'tahun': 0, 'bulan': 0, 'hari': 3, 'thn': '', 'bln': '', 'hari_display': '3', 'total_days': 3}
+      - 'Seminggu yang lalu' -> {'tahun': 0, 'bulan': 0, 'hari': 7, 'thn': '', 'bln': '', 'hari_display': '7', 'total_days': 7}
+      - '2 bulan lalu'       -> {'tahun': 0, 'bulan': 2, 'hari': 0, 'thn': '', 'bln': '2', 'hari_display': '', 'total_days': 60}
+      - '1 tahun 2 bulan'    -> {'tahun': 1, 'bulan': 2, 'hari': 0, 'thn': '1', 'bln': '2', 'hari_display': '', 'total_days': 425}
+    """
+    if not dur_str:
+        return {
+            "tahun": 0, "bulan": 0, "hari": 0,
+            "thn": "", "bln": "", "hari_display": "",
+            "total_days": 0
+        }
+
+    d_low = dur_str.lower()
+    tahun = 0
+    bulan = 0
+    hari = 0
+
+    if "setengah tahun" in d_low or "separuh tahun" in d_low:
+        bulan += 6
+    elif "setengah bulan" in d_low or "separuh bulan" in d_low:
+        hari += 15
+
+    # 1. Cek tahun
+    m_thn = re.search(r'(\d+|satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan|sepuluh)\s+tahun|\bsetahun\b|\bsetahunan\b', d_low)
+    if m_thn:
+        matched = m_thn.group(1) if m_thn.group(1) else "1"
+        tahun += _parse_duration_num(matched) or 1
+
+    # 2. Cek bulan
+    m_bln = re.search(r'(\d+|satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan|sepuluh|sebelas|dua\s+belas)\s+bulan|\bsebulan\b|\bsebulanan\b', d_low)
+    if m_bln:
+        matched = m_bln.group(1) if m_bln.group(1) else "1"
+        bulan += _parse_duration_num(matched) or 1
+
+    # 3. Cek minggu (dikonversi ke hari: 1 minggu = 7 hari untuk form rekam medis)
+    m_mgg = re.search(r'(\d+|satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan|sepuluh)\s+minggu|\bseminggu\b|\bsemingguan\b', d_low)
+    if m_mgg:
+        matched = m_mgg.group(1) if m_mgg.group(1) else "1"
+        num_mgg = _parse_duration_num(matched) or 1
+        hari += num_mgg * 7
+
+    # 4. Cek hari
+    m_hari = re.search(r'(\d+|satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan|sepuluh|sebelas|dua\s+belas|dua puluh|tiga puluh)\s+hari|\bsehari\b|\bseharian\b', d_low)
+    if m_hari:
+        matched = m_hari.group(1) if m_hari.group(1) else "1"
+        hari += _parse_duration_num(matched) or 1
+
+    # 5. Cek pola onset waktu jika hari/bln/thn masih 0
+    if tahun == 0 and bulan == 0 and hari == 0:
+        if "kemarin lusa" in d_low:
+            hari = 2
+        elif any(k in d_low for k in ["kemarin", "semalam", "tadi malam", "tadi pagi", "sejak tadi", "jam"]):
+            hari = 1
+        elif "beberapa hari" in d_low:
+            hari = 3
+
+    # Normalisasi jika bulan >= 12
+    if bulan >= 12:
+        tahun += bulan // 12
+        bulan = bulan % 12
+
+    total_days = (tahun * 365) + (bulan * 30) + hari
+
+    return {
+        "tahun": tahun,
+        "bulan": bulan,
+        "hari": hari,
+        "thn": str(tahun) if tahun > 0 else "",
+        "bln": str(bulan) if bulan > 0 else "",
+        "hari_display": str(hari) if hari > 0 else "",
+        "total_days": total_days
+    }
 
 
 def _extract_structured_duration(normalized: str, labeled_segments: list = None) -> dict | None:
@@ -1174,13 +1271,22 @@ def _extract_structured_duration(normalized: str, labeled_segments: list = None)
     elif "tadi malam" in d_low or "semalam" in d_low:
         event_time = "Semalam"
 
+    parsed = _parse_duration_to_numbers(dur_str)
+
     return {
         "original_text": dur_str,
         "value": val,
         "unit": unit,
         "is_approximate": is_approx,
         "source": source,
-        "event_time": event_time
+        "event_time": event_time,
+        "years": parsed["tahun"],
+        "months": parsed["bulan"],
+        "days": parsed["hari"],
+        "thn": parsed["thn"],
+        "bln": parsed["bln"],
+        "hari": parsed["hari_display"],
+        "parsed": parsed
     }
 
 
@@ -2165,10 +2271,25 @@ class MedicalComplaintExtractor:
             "keluhan_utama": chief_str,
             "keluhan_tambahan": ", ".join(structured_secondary_text) if structured_secondary_text else "",
             "lama_sakit": duration_str,
+            "lama_sakit_thn": (duration_dict.get("parsed", {}) if duration_dict else {}).get("thn", ""),
+            "lama_sakit_bln": (duration_dict.get("parsed", {}) if duration_dict else {}).get("bln", ""),
+            "lama_sakit_hari": (duration_dict.get("parsed", {}) if duration_dict else {}).get("hari_display", ""),
+            "lama_sakit_tahun": (duration_dict.get("parsed", {}) if duration_dict else {}).get("tahun", 0),
+            "lama_sakit_bulan": (duration_dict.get("parsed", {}) if duration_dict else {}).get("bulan", 0),
+            "lama_sakit_hari_num": (duration_dict.get("parsed", {}) if duration_dict else {}).get("hari", 0),
             "fields": {
                 "keluhan_utama": chief_str,
                 "keluhan_tambahan": ", ".join(structured_secondary_text) if structured_secondary_text else "",
                 "lama_sakit": duration_str,
+                "lama_sakit_thn": (duration_dict.get("parsed", {}) if duration_dict else {}).get("thn", ""),
+                "lama_sakit_bln": (duration_dict.get("parsed", {}) if duration_dict else {}).get("bln", ""),
+                "lama_sakit_hari": (duration_dict.get("parsed", {}) if duration_dict else {}).get("hari_display", ""),
+                "lama_sakit_tahun": (duration_dict.get("parsed", {}) if duration_dict else {}).get("tahun", 0),
+                "lama_sakit_bulan": (duration_dict.get("parsed", {}) if duration_dict else {}).get("bulan", 0),
+                "lama_sakit_hari_num": (duration_dict.get("parsed", {}) if duration_dict else {}).get("hari", 0),
+                "duration_parsed": duration_dict.get("parsed", {}) if duration_dict else {
+                    "tahun": 0, "bulan": 0, "hari": 0, "thn": "", "bln": "", "hari_display": "", "total_days": 0
+                },
             },
             "clinical_entities": {
                 "vitals": legacy_vitals,
@@ -2251,10 +2372,25 @@ class MedicalComplaintExtractor:
             "keluhan_utama": "",
             "keluhan_tambahan": "",
             "lama_sakit": "",
+            "lama_sakit_thn": "",
+            "lama_sakit_bln": "",
+            "lama_sakit_hari": "",
+            "lama_sakit_tahun": 0,
+            "lama_sakit_bulan": 0,
+            "lama_sakit_hari_num": 0,
             "fields": {
                 "keluhan_utama": "",
                 "keluhan_tambahan": "",
                 "lama_sakit": "",
+                "lama_sakit_thn": "",
+                "lama_sakit_bln": "",
+                "lama_sakit_hari": "",
+                "lama_sakit_tahun": 0,
+                "lama_sakit_bulan": 0,
+                "lama_sakit_hari_num": 0,
+                "duration_parsed": {
+                    "tahun": 0, "bulan": 0, "hari": 0, "thn": "", "bln": "", "hari_display": "", "total_days": 0
+                },
             },
             "clinical_entities": {
                 "vitals": {}, "allergies": {}, "patient_turns": 0, "doctor_turns": 0

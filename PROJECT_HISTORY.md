@@ -233,3 +233,28 @@ Berdasarkan temuan kasus dialog medis di mana keluhan `"tenggorokan juga agak sa
    - `test_clinical_fidelity.py`: **12/12 PASS (100%)**.
    - Dialog uji coba berhasil mengekstrak `Keluhan Tambahan: Batuk, Badan lemas, Sakit tenggorokan` dan mual/muntah berstatus disangkal (*absent*).
 
+## 11. Parsing Angka Numerik Durasi / Lama Sakit (Tahun / Bulan / Hari) untuk CoreERP EMR (v3.5)
+
+Berdasarkan kebutuhan integrasi formulir rekam medis CoreERP (arahan Divavava):
+1. **Dukungan Segmentasi Numerik Durasi (`medical_extractor.py`):**
+   - Formulir rekam medis rumah sakit CoreERP membagi input `LAMA SAKIT` menjadi 3 kolom angka terpisah: `[ ] Thn  [ ] Bln  [ ] Hari`.
+   - Mengimplementasikan parser klinis `_parse_duration_to_numbers()` yang secara otomatis mengonversi frasa durasi percakapan pasien/dokter ke angka:
+     - *"Sejak kemarin sore"* / *"semalam"* / *"tadi pagi"* → `Hari: 1` (`thn: ""`, `bln: ""`, `hari: "1"`)
+     - *"Kemarin lusa"* → `Hari: 2`
+     - *"Sudah 3 hari"* → `Hari: 3`
+     - *"2 minggu"* → `Hari: 14` (konversi minggu ke hari)
+     - *"1 bulan"* → `Bln: 1`
+     - *"1 tahun 2 bulan"* → `Thn: 1`, `Bln: 2`
+2. **Dukungan Durasi Gabungan (*Compound Duration*):**
+   - Menambahkan pola regex durasi majemuk di `DURATION_PATTERNS` untuk menangkap kombinasi multi-satuan seperti *"1 tahun 2 bulan"*, *"1 bulan 5 hari"*, dsb.
+3. **Penyelarasan API & Payload EMR (`web_app.py`):**
+   - Field `lama_sakit_thn`, `lama_sakit_bln`, `lama_sakit_hari`, serta `duration_parsed` disertakan pada response JSON `fields` dan `duration` dengan 100% backward compatibility.
+4. **Pembaruan Antarmuka Web (`static/index.html`):**
+   - Menambahkan segmented input group `[ ] Thn  [ ] Bln  [ ] Hari` persis sesuai desain form CoreERP.
+   - Mengisi nilai secara otomatis (*auto-populate*) saat audio selesai dianalisis.
+   - Mendukung penyimpanan koreksi manual tenaga medis (`saveStaffCorrections`).
+5. **Hasil Pengujian & Regresi:**
+   - `test_clinical_fidelity.py`: **13/13 PASS (100%)**.
+   - `test_modules.py`: **14/14 PASS (100%)**.
+   - `evaluate_quality.py`: Duration & Self-Correction Accuracy **100.00% (9/9)**.
+

@@ -613,13 +613,26 @@
             </div>
 
             <!-- Lama Sakit -->
-            <div class="field-row" style="max-width:440px;">
+            <div class="field-row">
                 <label class="field-label" for="lamaSakit">
                     <span>LAMA SAKIT / DURASI</span>
-                    <span style="font-weight:400;color:var(--text-muted);text-transform:none;">Onset &amp; Duration</span>
+                    <span style="font-weight:400;color:var(--text-muted);text-transform:none;">Onset &amp; Duration (Parsed Angka: Thn / Bln / Hari)</span>
                 </label>
-                <input type="text" id="lamaSakit" class="field-input"
-                       placeholder="Contoh: Dari kemarin malam · Sudah 3 hari">
+                <!-- Form Segment CoreERP (Tahun / Bulan / Hari) -->
+                <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+                    <div style="display:inline-flex;align-items:stretch;border:1px solid #cbd5e1;border-radius:6px;overflow:hidden;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,0.04);">
+                        <input type="number" id="lamaSakitThn" min="0" style="width:68px;border:none;padding:0.45rem 0.5rem;text-align:center;font-size:0.95rem;font-weight:600;outline:none;" placeholder="">
+                        <span style="display:inline-flex;align-items:center;padding:0 0.65rem;background:#f8fafc;border-left:1px solid #cbd5e1;border-right:1px solid #cbd5e1;font-size:0.85rem;color:#475569;font-weight:600;">Thn</span>
+                        <input type="number" id="lamaSakitBln" min="0" style="width:68px;border:none;padding:0.45rem 0.5rem;text-align:center;font-size:0.95rem;font-weight:600;outline:none;" placeholder="">
+                        <span style="display:inline-flex;align-items:center;padding:0 0.65rem;background:#f8fafc;border-left:1px solid #cbd5e1;border-right:1px solid #cbd5e1;font-size:0.85rem;color:#475569;font-weight:600;">Bln</span>
+                        <input type="number" id="lamaSakitHari" min="0" style="width:68px;border:none;padding:0.45rem 0.5rem;text-align:center;font-size:0.95rem;font-weight:600;outline:none;" placeholder="">
+                        <span style="display:inline-flex;align-items:center;padding:0 0.65rem;background:#f8fafc;border-left:1px solid #cbd5e1;font-size:0.85rem;color:#475569;font-weight:600;">Hari</span>
+                    </div>
+                    <div style="flex:1;min-width:220px;max-width:380px;">
+                        <input type="text" id="lamaSakit" class="field-input" style="font-size:0.85rem;padding:0.45rem 0.65rem;background:#f8fafc;"
+                               placeholder="Teks Klinis: Dari kemarin malam · Sudah 3 hari">
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1065,12 +1078,20 @@
         const fUtama    = document.getElementById('keluhanUtama');
         const fTambahan = document.getElementById('keluhanTambahan');
         const fLama     = document.getElementById('lamaSakit');
+        const fLamaThn  = document.getElementById('lamaSakitThn');
+        const fLamaBln  = document.getElementById('lamaSakitBln');
+        const fLamaHari = document.getElementById('lamaSakitHari');
 
         fUtama.value    = fields.keluhan_utama    || '';
         fTambahan.value = fields.keluhan_tambahan || '';
         fLama.value     = fields.lama_sakit       || '';
 
-        [fUtama, fTambahan, fLama].forEach(el => {
+        const durParsed = (data.duration && data.duration.parsed) || fields.duration_parsed || {};
+        if (fLamaThn)  fLamaThn.value  = durParsed.thn !== undefined ? durParsed.thn : (fields.lama_sakit_thn || '');
+        if (fLamaBln)  fLamaBln.value  = durParsed.bln !== undefined ? durParsed.bln : (fields.lama_sakit_bln || '');
+        if (fLamaHari) fLamaHari.value = durParsed.hari_display !== undefined ? durParsed.hari_display : (fields.lama_sakit_hari || '');
+
+        [fUtama, fTambahan, fLama, fLamaThn, fLamaBln, fLamaHari].filter(Boolean).forEach(el => {
             el.classList.add('updated');
             setTimeout(() => el.classList.remove('updated'), 1800);
         });
@@ -1174,7 +1195,10 @@
                     updated_fields: {
                         keluhan_utama: u,
                         keluhan_tambahan: t,
-                        lama_sakit: l
+                        lama_sakit: l,
+                        lama_sakit_thn: document.getElementById('lamaSakitThn') ? document.getElementById('lamaSakitThn').value.trim() : '',
+                        lama_sakit_bln: document.getElementById('lamaSakitBln') ? document.getElementById('lamaSakitBln').value.trim() : '',
+                        lama_sakit_hari: document.getElementById('lamaSakitHari') ? document.getElementById('lamaSakitHari').value.trim() : ''
                     }
                 })
             });
@@ -1411,11 +1435,20 @@
         const utama    = document.getElementById('keluhanUtama').value.trim();
         const tambahan = document.getElementById('keluhanTambahan').value.trim();
         const lama     = document.getElementById('lamaSakit').value.trim();
+        const thn      = document.getElementById('lamaSakitThn') ? document.getElementById('lamaSakitThn').value.trim() : '';
+        const bln      = document.getElementById('lamaSakitBln') ? document.getElementById('lamaSakitBln').value.trim() : '';
+        const hari     = document.getElementById('lamaSakitHari') ? document.getElementById('lamaSakitHari').value.trim() : '';
 
-        if (!utama && !tambahan && !lama) {
+        if (!utama && !tambahan && !lama && !thn && !bln && !hari) {
             alert('Formulir masih kosong, tidak ada yang disalin.');
             return;
         }
+
+        const durParts = [];
+        if (thn) durParts.push(`${thn} Thn`);
+        if (bln) durParts.push(`${bln} Bln`);
+        if (hari) durParts.push(`${hari} Hari`);
+        const durNumStr = durParts.length > 0 ? ` [${durParts.join(' ')}]` : '';
 
         const formatted = 
 `KELUHAN UTAMA:
@@ -1425,7 +1458,7 @@ KELUHAN TAMBAHAN / ANAMNESA:
 ${tambahan || '-'}
 
 LAMA SAKIT / DURASI:
-${lama || '-'}`;
+${(lama || '') + durNumStr || '-'}`;
 
         navigator.clipboard.writeText(formatted).then(() => {
             const btn = document.getElementById('btnCopy');
@@ -1443,8 +1476,9 @@ ${lama || '-'}`;
 
     // ── Clear Form ────────────────────────────────────────────────
     function clearForm() {
-        ['keluhanUtama','keluhanTambahan','lamaSakit'].forEach(id => {
-            document.getElementById(id).value = '';
+        ['keluhanUtama','keluhanTambahan','lamaSakit','lamaSakitThn','lamaSakitBln','lamaSakitHari'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = '';
         });
         document.getElementById('statusBadge').classList.remove('visible');
         document.getElementById('confidenceArea').style.display = 'none';
