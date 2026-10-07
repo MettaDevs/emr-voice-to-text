@@ -404,10 +404,11 @@ def _split_into_dialogue_sentences(text: str) -> list[str]:
 
     t = text.strip()
 
-    # 1. Transisi: Sapaan Pasien ke Dokter -> Pertanyaan Dokter
+    # 1. Transisi: Sapaan Pasien ke Dokter -> Sapaan Balik / Pertanyaan Dokter
+    # Contoh: "Hai malam dok, malam bu, keluhannya apa ya bu" -> "Hai malam dok. malam bu, keluhannya apa ya bu"
     # Contoh: "Selamat pagi dok ada keluhan apa bu" -> "Selamat pagi dok. ada keluhan apa bu"
     t = re.sub(
-        r'((?:selamat\s+(?:pagi|siang|sore|malam)|pagi|siang|sore|malam)\s+dok(?:ter)?)[,.]?\s+(?=(?:ada\s+keluhan|keluhan(?:nya)?|silakan|coba|apa\s+yang))',
+        r'(\b(?:hai|halo|selamat\s+(?:pagi|siang|sore|malam)|pagi|siang|sore|malam)\s+dok(?:ter)?)[,.]?\s+(?=(?:(?:selamat\s+(?:pagi|siang|sore|malam)|pagi|siang|sore|malam|halo|hai)\s+(?:bu|pak|mas|mbak|bapak|ibu|dek|adik)\b|(?:ada\s+keluhan|keluhan(?:nya)?|silakan|coba|apa\s+yang|kenapa|sakit\s+apa|bisa\s+dibantu)\b))',
         r'\1. ', t, flags=re.I
     )
 
@@ -856,6 +857,10 @@ DURATION_PATTERNS = [
     r'\b((?:(?:' + DUR_PREFIX + r')\s+)?' + NUM_WORDS + r'\s+' + UNIT_WORDS + r'(?:\s+(?:dan|lewat)?\s*' + NUM_WORDS + r'\s+' + UNIT_WORDS + r')+(?:\s*(?:yang\s+lalu|lalu|ini|terakhir))?)\b',
     # "dari/sejak/sudah/sekitar N hari/minggu/bulan (lalu/ini/terakhir)"
     r'\b((?:' + DUR_PREFIX + r')\s+' + NUM_WORDS + r'\s+' + UNIT_WORDS + r'(?:\s*(?:yang\s+lalu|lalu|ini|terakhir))?)\b',
+    # "dari/sejak/sudah tahun/bulan/minggu/hari kemarin/lalu"
+    r'\b((?:' + DUR_PREFIX + r'\s+)?(?:tahun|bulan|minggu|hari)\s+(?:kemar[ei]n|lalu))\b',
+    # "tahun/bulan/minggu kemarin/lalu" (berdiri sendiri)
+    r'\b((?:tahun|bulan|minggu)\s+(?:kemar[ei]n|lalu))\b',
     # "dari/sejak/sudah kemarin malam/pagi/siang/sore/lusa"
     r'\b((?:dari|sejak|sudah)\s+kemar[ei]n\s+(?:mal[aeiu]m|pagi|siang|sore|lusa))\b',
     # "kemarin malam/pagi/siang/sore/lusa"
@@ -888,6 +893,8 @@ DURATION_PATTERNS = [
     r'\b(' + NUM_WORDS + r'\s+' + UNIT_WORDS + r')\b',
     # "sejak tadi" / "dari tadi"
     r'\b((?:dari|sejak)\s+tadi)\b',
+    # "kemarin" (berdiri sendiri / target ralat)
+    r'\b(kemar[ei]n)\b',
 ]
 
 
@@ -1053,7 +1060,7 @@ def _apply_layer2(text: str) -> str:
     return text
 
 
-def _extract_duration(normalized: str) -> tuple:
+def _extract_duration(normalized: str, chief: str = None) -> tuple:
     """
     Layer 4: Ekstrak durasi / lama sakit dengan deteksi koreksi ucapan (self-correction).
     Contoh: 'Saya panas sejak kemarin. Eh, bukan kemarin, sejak tadi pagi.' -> ('Sejak Tadi Pagi', 1)
@@ -1102,7 +1109,24 @@ def _extract_duration(normalized: str) -> tuple:
     if not valid_candidates:
         return "", 0
 
-    winner = valid_candidates[-1]
+    winner = None
+    if chief:
+        c_low = chief.lower()
+        chief_terms = [t.strip() for t in c_low.split("/") if t.strip()]
+        chief_pos = []
+        for term in chief_terms:
+            for m in re.finditer(r'\b' + re.escape(term) + r'\b', normalized, re.I):
+                chief_pos.append(m.start())
+
+        if chief_pos:
+            def _dist_to_chief(cand):
+                return min(abs(cand["start"] - pos) for pos in chief_pos)
+            valid_candidates_sorted = sorted(valid_candidates, key=_dist_to_chief)
+            winner = valid_candidates_sorted[0]
+
+    if not winner:
+        winner = valid_candidates[-1]
+
     d = winner["text"]
     d = re.sub(r'mal[aeiu]m', 'malam', d, flags=re.I)
     d = re.sub(r'kemar[ei]n', 'kemarin', d, flags=re.I)
@@ -1160,24 +1184,33 @@ def _parse_duration_to_numbers(dur_str: str) -> dict:
     elif "setengah bulan" in d_low or "separuh bulan" in d_low:
         hari += 15
 
-    # 1. Cek tahun
-    m_thn = re.search(r'(\d+|satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan|sepuluh)\s+tahun|\bsetahun\b|\bsetahunan\b', d_low)
-    if m_thn:
-        matched = m_thn.group(1) if m_thn.group(1) else "1"
-        tahun += _parse_duration_num(matched) or 1
+    # 1. Cek tahun (angka eksplisit atau relative 'tahun kemarin / tahun lalu')
+    if re.search(r'\b(?:tahun\s+(?:kemar[ei]n|lalu))\b', d_low):
+        tahun += 1
+    else:
+        m_thn = re.search(r'(\d+|satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan|sepuluh)\s+tahun|\bsetahun\b|\bsetahunan\b', d_low)
+        if m_thn:
+            matched = m_thn.group(1) if m_thn.group(1) else "1"
+            tahun += _parse_duration_num(matched) or 1
 
-    # 2. Cek bulan
-    m_bln = re.search(r'(\d+|satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan|sepuluh|sebelas|dua\s+belas)\s+bulan|\bsebulan\b|\bsebulanan\b', d_low)
-    if m_bln:
-        matched = m_bln.group(1) if m_bln.group(1) else "1"
-        bulan += _parse_duration_num(matched) or 1
+    # 2. Cek bulan (angka eksplisit atau relative 'bulan kemarin / bulan lalu')
+    if re.search(r'\b(?:bulan\s+(?:kemar[ei]n|lalu))\b', d_low):
+        bulan += 1
+    else:
+        m_bln = re.search(r'(\d+|satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan|sepuluh|sebelas|dua\s+belas)\s+bulan|\bsebulan\b|\bsebulanan\b', d_low)
+        if m_bln:
+            matched = m_bln.group(1) if m_bln.group(1) else "1"
+            bulan += _parse_duration_num(matched) or 1
 
-    # 3. Cek minggu (dikonversi ke hari: 1 minggu = 7 hari untuk form rekam medis)
-    m_mgg = re.search(r'(\d+|satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan|sepuluh)\s+minggu|\bseminggu\b|\bsemingguan\b', d_low)
-    if m_mgg:
-        matched = m_mgg.group(1) if m_mgg.group(1) else "1"
-        num_mgg = _parse_duration_num(matched) or 1
-        hari += num_mgg * 7
+    # 3. Cek minggu (angka eksplisit atau relative 'minggu kemarin / minggu lalu')
+    if re.search(r'\b(?:minggu\s+(?:kemar[ei]n|lalu))\b', d_low):
+        hari += 7
+    else:
+        m_mgg = re.search(r'(\d+|satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan|sepuluh)\s+minggu|\bseminggu\b|\bsemingguan\b', d_low)
+        if m_mgg:
+            matched = m_mgg.group(1) if m_mgg.group(1) else "1"
+            num_mgg = _parse_duration_num(matched) or 1
+            hari += num_mgg * 7
 
     # 4. Cek hari
     m_hari = re.search(r'(\d+|satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan|sepuluh|sebelas|dua\s+belas|dua puluh|tiga puluh)\s+hari|\bsehari\b|\bseharian\b', d_low)
@@ -1187,9 +1220,9 @@ def _parse_duration_to_numbers(dur_str: str) -> dict:
 
     # 5. Cek pola onset waktu jika hari/bln/thn masih 0
     if tahun == 0 and bulan == 0 and hari == 0:
-        if "kemarin lusa" in d_low:
+        if "kemarin lusa" in d_low or "kemarin dulu" in d_low:
             hari = 2
-        elif any(k in d_low for k in ["kemarin", "semalam", "tadi malam", "tadi pagi", "sejak tadi", "jam"]):
+        elif any(k in d_low for k in ["kemarin", "semalam", "tadi malam", "tadi pagi", "tadi siang", "tadi sore", "sejak tadi", "jam"]):
             hari = 1
         elif "beberapa hari" in d_low:
             hari = 3
@@ -1212,9 +1245,9 @@ def _parse_duration_to_numbers(dur_str: str) -> dict:
     }
 
 
-def _extract_structured_duration(normalized: str, labeled_segments: list = None) -> dict | None:
+def _extract_structured_duration(normalized: str, labeled_segments: list = None, chief: str = None) -> dict | None:
     """Ekstraksi durasi dan waktu klinis terstruktur (P1)."""
-    dur_str, _ = _extract_duration(normalized)
+    dur_str, _ = _extract_duration(normalized, chief=chief)
     if not dur_str:
         return None
 
@@ -1233,7 +1266,16 @@ def _extract_structured_duration(normalized: str, labeled_segments: list = None)
     is_approx = bool(re.search(r'\b(?:sekitar|kurang\s+lebih|kira[- ]kira|beberapa|hampir)\b', d_low))
 
     # Unit detection
-    if "hari" in d_low or "seharian" in d_low:
+    if "tahun kemarin" in d_low or "tahun lalu" in d_low:
+        unit = "year"
+        val = 1
+    elif "bulan kemarin" in d_low or "bulan lalu" in d_low:
+        unit = "month"
+        val = 1
+    elif "minggu kemarin" in d_low or "minggu lalu" in d_low:
+        unit = "week"
+        val = 1
+    elif "hari" in d_low or "seharian" in d_low:
         unit = "day"
     elif "minggu" in d_low or "seminggu" in d_low:
         unit = "week"
@@ -1243,7 +1285,11 @@ def _extract_structured_duration(normalized: str, labeled_segments: list = None)
         unit = "year"
     elif "jam" in d_low:
         unit = "hour"
-    elif "kemarin" in d_low or "semalam" in d_low:
+    elif "kemarin lusa" in d_low or "kemarin dulu" in d_low:
+        unit = "day"
+        val = 2
+        is_approx = True
+    elif "kemarin" in d_low or "semalam" in d_low or "tadi" in d_low:
         unit = "day"
         val = 1
         is_approx = True
@@ -1262,12 +1308,34 @@ def _extract_structured_duration(normalized: str, labeled_segments: list = None)
     event_time = None
     if "kemarin malam" in d_low:
         event_time = "Kemarin malam"
-    elif "kemarin lusa" in d_low:
+    elif "kemarin lusa" in d_low or "kemarin dulu" in d_low:
         event_time = "Kemarin lusa"
+    elif "kemarin sore" in d_low:
+        event_time = "Kemarin sore"
+    elif "kemarin siang" in d_low:
+        event_time = "Kemarin siang"
+    elif "kemarin pagi" in d_low:
+        event_time = "Kemarin pagi"
+    elif "tahun kemarin" in d_low:
+        event_time = "Tahun kemarin"
+    elif "tahun lalu" in d_low:
+        event_time = "Tahun lalu"
+    elif "bulan kemarin" in d_low:
+        event_time = "Bulan kemarin"
+    elif "bulan lalu" in d_low:
+        event_time = "Bulan lalu"
+    elif "minggu kemarin" in d_low:
+        event_time = "Minggu kemarin"
+    elif "minggu lalu" in d_low:
+        event_time = "Minggu lalu"
     elif "kemarin" in d_low:
         event_time = "Kemarin"
     elif "tadi pagi" in d_low:
         event_time = "Tadi pagi"
+    elif "tadi siang" in d_low:
+        event_time = "Tadi siang"
+    elif "tadi sore" in d_low:
+        event_time = "Tadi sore"
     elif "tadi malam" in d_low or "semalam" in d_low:
         event_time = "Semalam"
 
@@ -1782,7 +1850,7 @@ def _extract_structured_chief_complaint(normalized: str, labeled_segments: list 
                 break
 
     # Durasi & keparahan
-    dur_dict = _extract_structured_duration(normalized, labeled_segments=labeled_segments)
+    dur_dict = _extract_structured_duration(normalized, labeled_segments=labeled_segments, chief=chief_str)
     dur_val = dur_dict.get("original_text") if dur_dict else None
     if dur_dict:
         onset_val = dur_dict.get("event_time")
@@ -2178,7 +2246,7 @@ class MedicalComplaintExtractor:
         chief_str = struct_chief["value"] or ""
         chief_pts = 2 if chief_str else 0
 
-        duration_dict = _extract_structured_duration(corrected_text, labeled_segments=labeled_segments)
+        duration_dict = _extract_structured_duration(corrected_text, labeled_segments=labeled_segments, chief=chief_str)
         duration_str = duration_dict["original_text"] if duration_dict else ""
         dur_pts = 2 if duration_str else 0
 

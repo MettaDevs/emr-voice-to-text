@@ -245,8 +245,40 @@ class TestClinicalFidelity(unittest.TestCase):
         self.assertEqual(dur5["thn"], "1")
         self.assertEqual(dur5["bln"], "2")
 
+    # ── Rule 14: Pemisahan Giliran Sapaan Awal & Durasi Relatif Tahun/Bulan Kemarin ──
+    def test_greeting_turn_split_and_relative_duration(self):
+        """'Hai malam dok, malam bu, keluhannya apa ya bu?' terpisah menjadi Pasien dan Dokter,
+        dan 'saya pilek dari tahun kemarin' terekstrak durasi tahun kemarin [1] Thn."""
+        segs = [
+            {"start": 0.2, "end": 5.5, "text": "Hai malam dok, malam bu, keluhannya apa ya bu?"},
+            {"start": 5.5, "end": 10.0, "text": "Ini dok, saya pilek dari tahun kemarin."},
+            {"start": 10.0, "end": 14.8, "text": "Dan ini juga ada panas dari bulan kemarin."},
+            {"start": 14.8, "end": 17.8, "text": "Kira-kira penyebabnya apa."},
+            {"start": 17.8, "end": 18.6, "text": "Ya dok?"}
+        ]
+        full_text = " ".join(s["text"] for s in segs)
+        res = self.extractor.extract(full_text, segments=segs)
+
+        # 1. Verifikasi pemisahan giliran dialog segmen 1
+        labeled = res["labeled_segments"]
+        self.assertEqual(labeled[0]["speaker"], "Pasien")
+        self.assertIn("hai malam dok", labeled[0]["text"].lower())
+
+        self.assertEqual(labeled[1]["speaker"], "Dokter")
+        self.assertIn("keluhannya apa", labeled[1]["text"].lower())
+
+        # 2. Verifikasi keluhan dan durasi
+        self.assertEqual(res["keluhan_utama"], "Pilek")
+        self.assertIn("panas", res["keluhan_tambahan"].lower())
+        self.assertEqual(res["lama_sakit"], "Dari Tahun Kemarin")
+        self.assertEqual(res["fields"]["lama_sakit_thn"], "1")
+        self.assertEqual(res["fields"]["lama_sakit_bln"], "")
+        self.assertEqual(res["fields"]["lama_sakit_hari"], "")
+        self.assertEqual(res["duration"]["years"], 1)
+
 
 if __name__ == "__main__":
     unittest.main()
+
 
 

@@ -258,3 +258,22 @@ Berdasarkan kebutuhan integrasi formulir rekam medis CoreERP (arahan Divavava):
    - `test_modules.py`: **14/14 PASS (100%)**.
    - `evaluate_quality.py`: Duration & Self-Correction Accuracy **100.00% (9/9)**.
 
+## 12. Pemisahan Giliran Sapaan Awal & Ekstraksi Durasi Relatif Medis (v3.6)
+
+Berdasarkan temuan kasus pada dialog transkrip konsultasi medis (misalnya: *"Hai malam dok, malam bu, keluhannya apa ya bu?"* dan *"saya pilek dari tahun kemarin"*):
+1. **Pemisahan Giliran Dialog Transisi Sapaan Pasien → Dokter (`_split_into_dialogue_sentences`):**
+   - Transkrip segmen awal yang menyatukan sapaan pasien (*"Hai malam dok"*) dan sambutan balik/pertanyaan dokter (*"malam bu, keluhannya apa ya bu?"*) sebelumnya terikat dalam 1 segmen dan keliru diberi label seluruhnya sebagai `[PASIEN]`.
+   - Diperbaiki dengan aturan pemecahan transisi giliran dialog (Rule 1 lookahead) yang mendeteksi sapaan ke dokter diikuti sapaan dokter kepada pasien dengan panggilan/honorifik (`bu|pak|mas|mbak|bapak|ibu|dek|adik`) atau frasa inisiasi keluhan (`keluhan(?:nya)?|ada keluhan|apa yang|silakan|bisa dibantu`), memisahkan segmen secara proporsional menjadi `[Pasien]` dan `[Dokter]`.
+2. **Ekstraksi Durasi Relatif Medis (`DURATION_PATTERNS` & `_parse_duration_to_numbers`):**
+   - Ungkapan durasi relatif berbasis satuan waktu masa lalu seperti *"tahun kemarin / tahun lalu"*, *"bulan kemarin / bulan lalu"*, dan *"minggu kemarin / minggu lalu"* sebelumnya belum tercakup di `DURATION_PATTERNS` sehingga field lama sakit kosong.
+   - Menambahkan pola durasi relatif ke `DURATION_PATTERNS`.
+   - Menambahkan parser numerik: *"tahun kemarin / tahun lalu"* → `Thn: 1`, *"bulan kemarin / bulan lalu"* → `Bln: 1`, *"minggu kemarin / minggu lalu"* → `Hari: 7`.
+   - Menambahkan pola `r'\b(kemar[ei]n)\b'` tunggal di urutan akhir untuk melengkapi deteksi ralat ucapan (*self-correction*).
+3. **Penyelarasan Durasi Multi-Keluhan ke Keluhan Utama (`_extract_duration`):**
+   - Jika terdapat beberapa durasi untuk keluhan berbeda dalam satu dialog (*"pilek dari tahun kemarin"* dan *"panas dari bulan kemarin"*), sistem secara cerdas memilih durasi yang paling relevan/terdekat dengan posisi kemunculan `Keluhan Utama`.
+4. **Hasil Pengujian & Verifikasi:**
+   - `test_clinical_fidelity.py`: **14/14 PASS (100%)** (termasuk Rule 14).
+   - `test_modules.py`: **14/14 PASS (100%)**.
+   - `evaluate_quality.py`: Duration & Self-Correction Accuracy **100.00% (9/9)**.
+   - Skenario kasus pengguna terverifikasi akurat: Segmen 1 terbelah `[Pasien]` & `[Dokter]`, Keluhan Utama: `Pilek`, Keluhan Tambahan: `Panas`, Lama Sakit: `Dari Tahun Kemarin` (`[1] Thn [ ] Bln [ ] Hari`).
+
