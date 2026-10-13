@@ -117,11 +117,12 @@ class SpeechTranscriber:
             speech_pad_ms=400            # Padding 400ms agar konsonan awal/akhir tidak terpotong
         ) if use_vad else None
 
+        beam_size = int(os.environ.get("WHISPER_BEAM_SIZE", "1" if self.device == "cpu" else "5"))
         segments, info = self.model.transcribe(
             audio_data,
             language="id",
             initial_prompt=INDONESIAN_CLINICAL_PROMPT,
-            beam_size=5,
+            beam_size=beam_size,
             temperature=0.0,
             repetition_penalty=1.08,
             no_repeat_ngram_size=0,
