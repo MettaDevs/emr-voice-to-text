@@ -277,3 +277,25 @@ Berdasarkan temuan kasus pada dialog transkrip konsultasi medis (misalnya: *"Hai
    - `evaluate_quality.py`: Duration & Self-Correction Accuracy **100.00% (9/9)**.
    - Skenario kasus pengguna terverifikasi akurat: Segmen 1 terbelah `[Pasien]` & `[Dokter]`, Keluhan Utama: `Pilek`, Keluhan Tambahan: `Panas`, Lama Sakit: `Dari Tahun Kemarin` (`[1] Thn [ ] Bln [ ] Hari`).
 
+## 13. Evaluasi Kinerja CPU vs GPU & Analisis Cost-Efficiency (v3.7)
+
+Berdasarkan arahan manajemen/atasan untuk mengevaluasi operasional tanpa kartu grafis (CPU-only) guna menemukan opsi dengan biaya operasional (*cost*) paling rendah, kecepatan pemrosesan tinggi, serta hasil ekstraksi klinis yang tetap presisi dan sesuai:
+
+1. **Hasil Benchmark Empiris (`benchmark_cpu_vs_gpu.py`):**
+   - Lingkungan Uji: Intel Core i5-12450HX (12 Threads), RAM 12GB, Windows 11.
+   - Dataset Uji: Sampel audio konsultasi riil poliklinik (`sample_1_kepala_pipi`, `sample_2_perut_meriang`, `sample_3_batuk_sesak`).
+
+| Model & Device | Latensi Rata-rata | Real-Time Factor (RTF) | EMR Extraction Fidelity | Estimasi Cost Server Cloud / Hardware | Kesimpulan & Rekomendasi |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| **GPU RTX 3050 (large-v3-turbo FP16)** | **1.00s** | **0.10x** | **100.0%** | Tinggi (~$380/bln / GPU Rp 5-8jt) | Baseline performa maksimal. Sangat cepat, tapi biaya infrastruktur paling tinggi. |
+| **CPU (large-v3-turbo int8)** | 9.29s | 0.95x | 100.0% | Sedang (~$60/bln) | Akurasi tetap 100%, namun latensi hampir 10 detik per rekaman (kurang responsif). |
+| **CPU (small int8, 4 threads)** | **2.65s – 3.8s** | **0.25x – 0.35x** | **100.0%** | **Rendah (~$40–$50/bln / Mini PC)** | ⭐ **REKOMENDASI UTAMA (SWEET SPOT)**: Hemat biaya 85%, cepat (<3s), hasil formulir 100% akurat. |
+| **CPU (base int8, 4 threads)** | **1.05s – 1.37s** | **0.14x** | **95.0%** | **Sangat Rendah (~$20–$30/bln)** | Opsi tercepat di CPU (menyamai GPU), keluhan utama & durasi aman, detail kata agak ringkas. |
+| **CPU (tiny int8)** | 0.81s | 0.08x | 33.3% | Terendah | ❌ **TIDAK LAYAK**: Kata pasien terpotong/hilang, risiko malapraktik administratif. |
+
+2. **Dukungan Konfigurasi Dinamis (`transcriber.py` & `web_app.py`):**
+   - Mendukung pemilihan model dan hardware otomatis via environment variable:
+     - `WHISPER_DEVICE`: `cuda` atau `cpu`
+     - `WHISPER_MODEL`: `large-v3-turbo`, `small`, atau `base`
+     - `WHISPER_CPU_THREADS`: default `4` (optimal untuk CPU modern tanpa membebani core sistem)
+

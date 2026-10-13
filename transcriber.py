@@ -60,30 +60,52 @@ HALLUCINATIONS_AND_NOISE = {
 
 
 class SpeechTranscriber:
-    def __init__(self, model_size: str = "large-v3-turbo", device: str = None):
+    def __init__(self, model_size: str = None, device: str = None, cpu_threads: int = None):
         import ctranslate2
         cuda_count = ctranslate2.get_cuda_device_count()
 
+        # Baca konfigurasi dari parameter atau environment variable
+        env_model = os.environ.get("WHISPER_MODEL")
+        env_device = os.environ.get("WHISPER_DEVICE")
+        env_threads = os.environ.get("WHISPER_CPU_THREADS", "4")
+
+        self.model_size = model_size or env_model or "large-v3-turbo"
+
         if device is None:
-            self.device = "cuda" if cuda_count > 0 else "cpu"
+            if env_device:
+                self.device = env_device
+            else:
+                self.device = "cuda" if cuda_count > 0 else "cpu"
         else:
             self.device = device
 
+        try:
+            self.cpu_threads = cpu_threads if cpu_threads is not None else int(env_threads)
+        except Exception:
+            self.cpu_threads = 4
+
         self.compute_type = "float16" if self.device == "cuda" else "int8"
-        print(f"[Faster-Whisper] Loading model '{model_size}' pada device '{self.device}' ({self.compute_type})...")
+        thread_info = f", cpu_threads={self.cpu_threads}" if self.device == "cpu" else ""
+        print(f"[Faster-Whisper] Loading model '{self.model_size}' pada device '{self.device}' ({self.compute_type}{thread_info})...")
+
+        kwargs = {"device": self.device, "compute_type": self.compute_type}
+        if self.device == "cpu":
+            kwargs["cpu_threads"] = self.cpu_threads
 
         try:
-            self.model = WhisperModel(model_size, device=self.device, compute_type=self.compute_type)
+            self.model = WhisperModel(self.model_size, **kwargs)
         except Exception as e:
-            print(f"[Faster-Whisper] Gagal memuat pada {self.device} ({e}), mencoba fallback...")
+            print(f"[Faster-Whisper] Gagal memuat model '{self.model_size}' pada {self.device} ({e}), mencoba fallback...")
             try:
-                self.model = WhisperModel("small", device=self.device, compute_type=self.compute_type)
+                self.model_size = "small"
+                self.model = WhisperModel("small", **kwargs)
             except Exception:
                 self.device = "cpu"
                 self.compute_type = "int8"
-                self.model = WhisperModel("small", device="cpu", compute_type="int8")
+                self.model_size = "small"
+                self.model = WhisperModel("small", device="cpu", compute_type="int8", cpu_threads=self.cpu_threads)
 
-        print(f"[Faster-Whisper] Model SIAP! Berjalan di {self.device.upper()} dengan konfigurasi Clinical Indonesia.")
+        print(f"[Faster-Whisper] Model SIAP! Berjalan di {self.device.upper()} ({self.model_size}) dengan konfigurasi Clinical Indonesia.")
 
     def _execute_transcribe_pass(self, audio_data, use_vad: bool = True) -> tuple:
         """Eksekusi satu putaran transkripsi Whisper dengan konfigurasi klinis teroptimasi."""

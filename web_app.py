@@ -44,8 +44,8 @@ HISTORY_DIR = os.path.join(BASE_DIR, "session_history")
 for d in [AUDIO_DIR, STATIC_DIR, UPLOADS_DIR, HISTORY_DIR]:
     os.makedirs(d, exist_ok=True)
 
-print("[Inisialisasi] Memuat engine Faster-Whisper Large-v3-Turbo & Medical Extractor...")
-transcriber = SpeechTranscriber(model_size="large-v3-turbo")
+print("[Inisialisasi] Memuat engine Faster-Whisper & Medical Extractor...")
+transcriber = SpeechTranscriber()
 extractor = MedicalComplaintExtractor()
 
 
@@ -627,9 +627,9 @@ def health():
     return {
         "status": "ok",
         "whisper": "ready",
-        "device": "cuda" if cuda > 0 else "cpu",
+        "device": transcriber.device,
         "cuda_devices": cuda,
-        "model": "large-v3-turbo",
+        "model": transcriber.model_size,
     }
 
 
