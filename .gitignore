@@ -22,3 +22,4 @@ audit_logs/*.jsonl
 Thumbs.db
 .vscode/
 .idea/
+scratch/
